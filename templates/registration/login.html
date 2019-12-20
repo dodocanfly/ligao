@@ -1,0 +1,60 @@
+{% extends "index.html" %}
+
+{% block title %}Zaloguj się{% endblock %}
+
+{% block page-container %}
+    <!-- login area start -->
+    <div class="login-area">
+        <div class="container">
+            <div class="login-box ptb--100">
+                <form method="post">
+                    <div class="login-form-head">
+                        <h4>Zaloguj się</h4>
+                    </div>
+                    {% if form.errors %}
+                    <div style="padding: 15px;">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <p class="text-danger">{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="login-form-body">
+                        <div class="form-gp">
+                            {{ form.username.label_tag }}
+                            {{ form.username }}
+                            <i class="ti-email"></i>
+                            <div class="text-danger"></div>
+                        </div>
+                        <div class="form-gp">
+                            {{ form.password.label_tag }}
+                            {{ form.password }}
+                            <i class="ti-lock"></i>
+                            <div class="text-danger"></div>
+                        </div>
+                        <div class="row mb-4 rmber-area">
+                            <div class="col-6">
+                                <div class="custom-control custom-checkbox mr-sm-2">
+                                    <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
+                                    <label class="custom-control-label" for="customControlAutosizing">Zapamiętaj mnie</label>
+                                </div>
+                            </div>
+                            <div class="col-6 text-right">
+                                <a href="{% url "password_change" %}">Zapomniałeś hasła?</a>
+                            </div>
+                        </div>
+                        <div class="submit-btn-area">
+                            <button id="form_submit" type="submit">Zaloguj <i class="ti-arrow-right"></i></button>
+                        </div>
+                        <div class="form-footer text-center mt-5">
+                            <p class="text-muted">Nie masz jeszcze konta? <a href="register.html">Zarejestruj się</a></p>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- login area end -->
+{% endblock %}

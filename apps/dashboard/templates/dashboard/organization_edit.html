@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+
+{% block title %}Edytuj organizację{% endblock %}
+
+{% block content %}
+
+<form action="" method="post">
+{% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+</form>
+
+{% endblock %}
