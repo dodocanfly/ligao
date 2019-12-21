@@ -1784,7 +1784,7 @@ table.dbkit-table tr td {
 
 .btn {
     padding: 11px 17px;
-    font-size: 13px;
+    font-size: 1em;
     letter-spacing: 0;
 }
 
@@ -1865,7 +1865,7 @@ p.card-text {
 
 .list-group-item {
     color: #444;
-    font-size: 13px;
+    font-size: 1em;
 }
 
 .media-body {
@@ -1916,7 +1916,7 @@ p.card-text {
 }
 
 .form-control {
-    font-size: 14px;
+    font-size: 1em;
     border: 1px solid rgba(170, 170, 170, .3);
     padding: 10.72px 12.8px;
     padding: .67rem .8rem;
@@ -1940,6 +1940,10 @@ p.card-text {
 .input-group-lg>.input-group-prepend>.input-group-text {
     padding: 13.6px 16px;
     padding: .85rem 1rem;
+}
+
+select.form-control:not([size]):not([multiple]) {
+    height: 2.8em;
 }
 
 label {
@@ -2835,3 +2839,8 @@ table.dataTable thead td {
 }
 
 /*-------------------- END Offset Sidebar ------------------- */
+
+ul.errorlist {
+    font-size: 0.9em;
+    color: #f00;
+}

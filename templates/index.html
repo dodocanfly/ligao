@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load templactions %}
 
 {% block page-container %}
     <!-- page container area start -->
@@ -8,18 +9,34 @@
         <div class="sidebar-menu">
             <div class="sidebar-header">
                 <div class="logo">
-                    <a href="#"><img src="{% static "images/icon/logo.png" %}" alt="logo"></a>
+                    <h2><a href="/">ligao.pl</a></h2>
                 </div>
             </div>
             <div class="main-menu">
                 <div class="menu-inner">
                     <nav>
                         <ul class="metismenu" id="menu">
-                            <li>
+                            <li{% activeclass "organizacje" %}>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Organizacje</span></a>
                                 <ul class="collapse">
-                                    <li><a href="{% url 'organization_list' %}">Lista organizacji</a></li>
-                                    <li><a href="{% url 'organization_add' %}">Dodaj organizację</a></li>
+                                    <li{% activeclass "organizacje/lista" %}><a href="{% url 'organization-list' %}">Lista organizacji</a></li>
+                                    <li{% activeclass "organizacje/dodaj" %}><a href="{% url 'organization-add' %}">Dodaj organizację</a></li>
+                                </ul>
+                            </li>
+                            <li{% activeclass "sezony" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Sezony</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "sezony/lista" %}><a href="{% url 'season-list' %}">Lista sezonów</a></li>
+                                    <li{% activeclass "sezony/dodaj" %}><a href="{% url 'season-add' %}">Dodaj sezon</a></li>
+                                </ul>
+                            </li>
+                            <li{% activeclass "klub" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Kluby</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "kluby/lista" %}><a href="{% url 'club-list' %}">Lista klubów</a></li>
+                                    <li{% activeclass "kluby/dodaj" %}><a href="{% url 'club-add' %}">Dodaj klub</a></li>
+                                    <li{% activeclass "kategorie-klubow/lista" %}><a href="{% url 'club-category-list' %}">Lista kategorii</a></li>
+                                    <li{% activeclass "kategorie-klubow/dodaj" %}><a href="{% url 'club-category-add' %}">Dodaj kategorię</a></li>
                                 </ul>
                             </li>
                             <li><a href="#"><i class="ti-map-alt"></i><span>Not expanding</span></a></li>
@@ -70,10 +87,10 @@
                             <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
                             <li class="dropdown">
                                 <i class="ti-bell dropdown-toggle" data-toggle="dropdown">
-                                    <span>2</span>
+                                    <span>1</span>
                                 </i>
                                 <div class="dropdown-menu bell-notify-box notify-box">
-                                    <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
+                                    <span class="notify-title">You have 1 new notification <a href="#">view all</a></span>
                                     <div class="nofity-list">
                                         <a href="#" class="notify-item">
                                             <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
@@ -82,27 +99,13 @@
                                                 <span>Just Now</span>
                                             </div>
                                         </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
-                                            <div class="notify-text">
-                                                <p>New Commetns On Post</p>
-                                                <span>30 Seconds ago</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
-                                            <div class="notify-text">
-                                                <p>Some special like you</p>
-                                                <span>Just Now</span>
-                                            </div>
-                                        </a>
                                     </div>
                                 </div>
                             </li>
                             <li class="dropdown">
-                                <i class="fa fa-envelope-o dropdown-toggle" data-toggle="dropdown"><span>3</span></i>
+                                <i class="fa fa-envelope-o dropdown-toggle" data-toggle="dropdown"><span>1</span></i>
                                 <div class="dropdown-menu notify-box nt-enveloper-box">
-                                    <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
+                                    <span class="notify-title">You have 1 new notifications <a href="#">view all</a></span>
                                     <div class="nofity-list">
                                         <a href="#" class="notify-item">
                                             <div class="notify-thumb">
@@ -130,7 +133,7 @@
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <div class="breadcrumbs-area clearfix">
-                            <h4 class="page-title pull-left">Dashboard</h4>
+                            <h4 class="page-title pull-left">Panel</h4>
                             <ul class="breadcrumbs pull-left">
                                 <li><a href="/">Home</a></li>
                                 <li><span>Dashboard</span></li>
@@ -168,94 +171,10 @@
         <!-- footer area start-->
         <footer>
             <div class="footer-area">
-                <p>© Copyright 2018. All right reserved. Template by <a href="https://colorlib.com/wp/">Colorlib</a>.</p>
+                <p>© 2019 ligao.pl</p>
             </div>
         </footer>
         <!-- footer area end-->
     </div>
     <!-- page container area end -->
-    <!-- offset area start -->
-    <div class="offset-area">
-        <div class="offset-close"><i class="ti-close"></i></div>
-        <ul class="nav offset-menu-tab">
-            <li><a class="active" data-toggle="tab" href="#activity">Activity</a></li>
-            <li><a data-toggle="tab" href="#settings">Settings</a></li>
-        </ul>
-        <div class="offset-content tab-content">
-            <div id="activity" class="tab-pane fade in show active">
-                <div class="recent-activity">
-                    <div class="timeline-task">
-                        <div class="icon bg1">
-                            <i class="fa fa-envelope"></i>
-                        </div>
-                        <div class="tm-title">
-                            <h4>Rashed sent you an email</h4>
-                            <span class="time"><i class="ti-time"></i>09:35</span>
-                        </div>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse distinctio itaque at.
-                        </p>
-                    </div>
-                    <div class="timeline-task">
-                        <div class="icon bg2">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <div class="tm-title">
-                            <h4>Added</h4>
-                            <span class="time"><i class="ti-time"></i>7 Minutes Ago</span>
-                        </div>
-                        <p>Lorem ipsum dolor sit amet consectetur.
-                        </p>
-                    </div>
-                    <div class="timeline-task">
-                        <div class="icon bg2">
-                            <i class="fa fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="tm-title">
-                            <h4>You missed you Password!</h4>
-                            <span class="time"><i class="ti-time"></i>09:20 Am</span>
-                        </div>
-                    </div>
-                    <div class="timeline-task">
-                        <div class="icon bg3">
-                            <i class="fa fa-bomb"></i>
-                        </div>
-                        <div class="tm-title">
-                            <h4>Member waiting for you Attention</h4>
-                            <span class="time"><i class="ti-time"></i>09:35</span>
-                        </div>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse distinctio itaque at.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div id="settings" class="tab-pane fade">
-                <div class="offset-settings">
-                    <h4>General Settings</h4>
-                    <div class="settings-list">
-                        <div class="s-settings">
-                            <div class="s-sw-title">
-                                <h5>Notifications</h5>
-                                <div class="s-swtich">
-                                    <input type="checkbox" id="switch1" />
-                                    <label for="switch1">Toggle</label>
-                                </div>
-                            </div>
-                            <p>Keep it 'On' When you want to get all the notification.</p>
-                        </div>
-                        <div class="s-settings">
-                            <div class="s-sw-title">
-                                <h5>Show recent activity</h5>
-                                <div class="s-swtich">
-                                    <input type="checkbox" id="switch2" />
-                                    <label for="switch2">Toggle</label>
-                                </div>
-                            </div>
-                            <p>The for attribute is necessary to bind our custom checkbox with the input.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- offset area end -->
 {% endblock %}

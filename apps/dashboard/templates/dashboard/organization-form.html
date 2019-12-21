@@ -1,0 +1,21 @@
+{{ form.non_field_errors }}
+<div class="form-group">
+    {{ form.name.label_tag }}
+    {{ form.name }}
+    {{ form.errors.name }}
+</div>
+<div class="form-group">
+    {{ form.description.label_tag }}
+    {{ form.description }}
+    {{ form.errors.description }}
+</div>
+<div class="form-group">
+    {{ form.location.label_tag }}
+    {{ form.location }}
+    {{ form.errors.location }}
+</div>
+<div class="form-check">
+    {{ form.private }}
+    <label class="form-check-label" for="id_{{ form.private.name }}">{{ form.private.label }}</label>
+    {{ form.errors.private }}
+</div>

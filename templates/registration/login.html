@@ -41,14 +41,14 @@
                                 </div>
                             </div>
                             <div class="col-6 text-right">
-                                <a href="{% url "password_change" %}">Zapomniałeś hasła?</a>
+                                <a href="{% url "password_reset" %}">Zapomniałeś hasła?</a>
                             </div>
                         </div>
                         <div class="submit-btn-area">
                             <button id="form_submit" type="submit">Zaloguj <i class="ti-arrow-right"></i></button>
                         </div>
                         <div class="form-footer text-center mt-5">
-                            <p class="text-muted">Nie masz jeszcze konta? <a href="register.html">Zarejestruj się</a></p>
+                            <p class="text-muted">Nie masz jeszcze konta? <a href="{% url "register" %}">Zarejestruj się</a></p>
                         </div>
                     </div>
                     {% csrf_token %}

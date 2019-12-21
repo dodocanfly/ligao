@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.dashboard.models import Organization, Season
+
+admin.site.register(Organization)
+admin.site.register(Season)

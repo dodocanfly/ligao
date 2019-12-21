@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "Dodaj nowy sezon" %}{% endblock %}
+
+{% block content %}
+    <div class="col-12 mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">{% trans "Dodaj sezon" %}</h4>
+                <form method="post">
+                    {% include "dashboard/season-form.html" %}
+                    <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans "dodaj sezon" %}</button>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

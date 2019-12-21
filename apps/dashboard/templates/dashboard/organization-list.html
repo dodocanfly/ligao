@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "Lista organizacji" %}{% endblock %}
+
+{% block content %}
+    <ol class="list-group list-group-flush">
+        {% for object in object_list %}
+            <li class="list-group-item">
+                <a href="{% url 'organization-edit' object.id %}" class="btn btn-sm btn-info">{% trans "edytuj" %}</a>
+                <a href="{% url 'organization-delete' object.id %}" class="btn btn-sm btn-danger">{% trans "usuń" %}</a>
+                {{ object.name }}
+            </li>
+        {% empty %}
+            <li>
+                {% trans "nie ma jeszcze żadnej organizacji" %}
+                - <a href="{% url 'organization-add' %}">{% trans "dodaj pierwszą" %}</a>
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}
