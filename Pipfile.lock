@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3484928ac6dcb9dc6afe3d44d8ee77ba0a9a1b48bd9389a73edeb0093edfc243"
+            "sha256": "a58d7586fcc7128eba3352d9307d1b63e3e5b5b484a5d8b84d5c9e37ea5a231d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,14 @@
             ],
             "index": "pypi",
             "version": "==2.2.9"
+        },
+        "django-debug-toolbar": {
+            "hashes": [
+                "sha256:24c157bc6c0e1648e0a6587511ecb1b007a00a354ce716950bff2de12693e7a8",
+                "sha256:77cfba1d6e91b9bc3d36dc7dc74a9bb80be351948db5f880f2562a0cbf20b6c5"
+            ],
+            "index": "pypi",
+            "version": "==2.1"
         },
         "psycopg2": {
             "hashes": [

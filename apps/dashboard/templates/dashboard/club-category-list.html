@@ -4,18 +4,13 @@
 {% block title %}{% trans "Lista kategorii klubów" %}{% endblock %}
 
 {% block content %}
-    <ol class="list-group list-group-flush">
-        {% for object in object_list %}
-            <li class="list-group-item">
-                <a href="{% url 'club-category-edit' object.id %}" class="btn btn-sm btn-info">{% trans "edytuj" %}</a>
-                <a href="{% url 'club-category-delete' object.id %}" class="btn btn-sm btn-danger">{% trans "usuń" %}</a>
-                {{ object.name }}
-            </li>
-        {% empty %}
-            <li>
-                {% trans "nie ma jeszcze żadnej kategorii klubów" %}
-                - <a href="{% url 'club-category-add' %}">{% trans "dodaj pierwszą" %}</a>
-            </li>
-        {% endfor %}
-    </ol>
+    {% for organization in object_list %}
+        <h3>{{ organization.name }}</h3>
+        {% include 'dashboard/club-category-list-include.html' with categories=organization.get_main_club_categories %}
+    {% empty %}
+        <h3>
+            {% trans "nie ma jeszcze żadnej organizacji, do której przypisane mogą być kategorie klubów" %}
+            - <a href="{% url 'organization-add' %}">{% trans "dodaj organizację" %}</a>
+        </h3>
+    {% endfor %}
 {% endblock %}

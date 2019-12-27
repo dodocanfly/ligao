@@ -11,6 +11,9 @@ class Organization(models.Model):
     location = models.CharField(verbose_name=_('lokalizacja / miasto'), max_length=50, null=True, blank=True)
     private = models.BooleanField(verbose_name=_('organizacja prywatna'), default=False)
 
+    def get_main_club_categories(self):
+        return self.club_categories.filter(parent=None)
+
     def __str__(self):
         return self.name
 
@@ -48,9 +51,48 @@ class Season(models.Model):
 
 
 class ClubCategory(models.Model):
-    organization = models.ForeignKey(Organization, verbose_name=_('organizacja'), on_delete=models.PROTECT, related_name='club_categories')
+    organization = models.ForeignKey(
+        Organization, verbose_name=_('organizacja'), on_delete=models.PROTECT,
+        related_name='club_categories'
+    )
     name = models.CharField(verbose_name=_('nazwa kategorii'), max_length=50)
-    parent = models.ForeignKey('self', verbose_name=_('kategoria nadrzędna'), null=True, default=None, blank=True, on_delete=models.PROTECT)
+    parent = models.ForeignKey(
+        'self', verbose_name=_('kategoria nadrzędna'), null=True, default=None,
+        blank=True, on_delete=models.PROTECT, related_name='children'
+    )
+
+    def get_children(self):
+        return ClubCategory.objects.filter(parent=self)
+
+    def distance_to_root(self):
+        category = self
+        distance = 0
+        while category.parent is not None:
+            distance += 1
+            category = category.parent
+        return distance
+
+    def distance_to_farthest_leaf(self):
+        qs = ClubCategory.objects.filter(parent=self)
+        if qs.exists():
+            return self.__distance_to_farthest_leaf_recurs(qs)
+        return 0
+
+    def __distance_to_farthest_leaf_recurs(self, queryset):
+        counter = 1
+        for field in queryset:
+            qs = ClubCategory.objects.filter(parent=field)
+            if qs.exists():
+                counter += self.__distance_to_farthest_leaf_recurs(qs)
+        return counter
+
+    def am_i_in_myself(self, myself):
+        category = self
+        while category.parent is not None:
+            if category.parent == myself:
+                return True
+            category = category.parent
+        return False
 
     def clean(self):
         if self.parent == self:

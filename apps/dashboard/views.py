@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View, generic
 
-from apps.dashboard.forms import OrganizationCreateUpdateForm, SeasonAddEditForm, ClubCategoryAddEditForm
+from apps.dashboard.forms import OrganizationAddEditForm, SeasonAddEditForm, ClubCategoryAddEditForm
 from apps.dashboard.models import Organization, Season, ClubCategory
 
 
@@ -61,14 +61,14 @@ class OrganizationListView(BaseListView):
 
 
 class OrganizationAddView(BaseCreateView):
-    form_class = OrganizationCreateUpdateForm
+    form_class = OrganizationAddEditForm
     template_name = 'dashboard/organization-add.html'
     success_url = reverse_lazy('organization-list')
 
 
 class OrganizationEditView(BaseUpdateView):
     model = Organization
-    form_class = OrganizationCreateUpdateForm
+    form_class = OrganizationAddEditForm
     template_name = 'dashboard/organization-edit.html'
     success_url = reverse_lazy('organization-list')
 
@@ -131,7 +131,8 @@ class ClubCategoryListView(BaseListView):
     template_name = 'dashboard/club-category-list.html'
 
     def get_queryset(self):
-        return ClubCategory.objects.filter(organization__owner=self.request.user)
+        return Organization.objects.filter(owner=self.request.user)
+        # return ClubCategory.objects.filter(organization__owner=self.request.user)
 
 
 class ClubCategoryAddView(BaseCreateView):

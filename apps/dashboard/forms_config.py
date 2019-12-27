@@ -1,13 +1,15 @@
 from django.utils.translation import gettext_lazy as _
 
 
+MAX_CAT_TREE_DEPTH = 5
+
 FIELDS_ATTRS = {
 
-    'Organization': {
+    'OrganizationAddEditForm': {
         'name': {
             'class': 'form-control',
             'minlength': 3,
-            'placeholder': 'np. MOSiR Ełk',
+            'placeholder': _('np. MOSiR Ełk'),
         },
         'description': {
             'class': 'form-control',
@@ -21,7 +23,7 @@ FIELDS_ATTRS = {
         },
     },
 
-    'Season': {
+    'SeasonAddEditForm': {
         'organization': {
             'class': 'form-control'
         },
@@ -39,7 +41,7 @@ FIELDS_ATTRS = {
         },
     },
 
-    'ClubCategory': {
+    'ClubCategoryAddEditForm': {
         'name': {
             'class': 'form-control',
             'minlength': 5,
