@@ -39,6 +39,15 @@
                                     <li{% activeclass "kategorie-klubow/dodaj" %}><a href="{% url 'club-category-add' %}">Dodaj kategorię</a></li>
                                 </ul>
                             </li>
+                            <li{% activeclass "zespol" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Zespoły</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "zespoly/lista" %}><a href="{% url 'team-list' %}">Lista zespołów</a></li>
+                                    <li{% activeclass "zespoly/dodaj" %}><a href="{% url 'team-add' %}">Dodaj zespół</a></li>
+                                    <li{% activeclass "kategorie-zespolow/lista" %}><a href="{% url 'team-category-list' %}">Lista kategorii</a></li>
+                                    <li{% activeclass "kategorie-zespolow/dodaj" %}><a href="{% url 'team-category-add' %}">Dodaj kategorię</a></li>
+                                </ul>
+                            </li>
                             <li><a href="#"><i class="ti-map-alt"></i><span>Not expanding</span></a></li>
                             <li>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-align-left"></i><span>Multi level menu</span></a>

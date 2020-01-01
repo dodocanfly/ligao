@@ -1,0 +1,29 @@
+{% load i18n %}
+<ol style="padding: 10px 30px;">
+    {% for category in categories %}
+        {% if category.has_items %}
+            <li>
+                {{ category.name }}
+                {% if category.get_teams %}
+                    <ul>
+                        {% for team in category.get_teams %}
+                            <li>
+                                <a href="{% url "team-edit" team.id %}">{% trans "edytuj" %}</a>
+                                <a href="{% url "team-delete" team.id %}">{% trans "usuń" %}</a>
+                                <b>{{ team.name }}</b>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if category.get_children %}
+                    {% include 'dashboard/team-list-include.html' with categories=category.get_children %}
+                {% endif %}
+            </li>
+        {% endif %}
+    {% empty %}
+        <li>
+            {% trans "nie ma jeszcze żadnej kategorii zespołów w tej organizacji" %}
+            - <a href="{% url 'team-category-add' %}?o={{ org_id }}">{% trans "dodaj pierwszą" %}</a>
+        </li>
+    {% endfor %}
+</ol>

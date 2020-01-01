@@ -5,8 +5,9 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View, generic
 
-from apps.dashboard.forms import OrganizationAddEditForm, SeasonAddEditForm, ClubCategoryAddEditForm, ClubAddEditForm
-from apps.dashboard.models import Organization, Season, ClubCategory, Club
+from apps.dashboard.forms import OrganizationAddEditForm, SeasonAddEditForm, ClubCategoryAddEditForm, ClubAddEditForm, \
+    TeamCategoryAddEditForm, TeamAddEditForm
+from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team
 
 
 class IndexView(View):
@@ -132,7 +133,6 @@ class ClubCategoryListView(BaseListView):
 
     def get_queryset(self):
         return Organization.objects.filter(owner=self.request.user)
-        # return ClubCategory.objects.filter(organization__owner=self.request.user)
 
 
 class ClubCategoryAddView(BaseCreateView):
@@ -170,7 +170,6 @@ class ClubListView(BaseListView):
 
     def get_queryset(self):
         return Organization.objects.filter(owner=self.request.user)
-        # return Club.objects.filter(category__organization__owner=self.request.user)
 
 
 class ClubAddView(BaseCreateView):
@@ -194,5 +193,79 @@ class ClubDeleteView(BaseDeleteView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if not Club.objects.filter(id=obj.id, category__organization__owner=self.request.user).exists():
+            raise PermissionError(self.permission_error)
+        return obj
+
+
+"""
+            TEAMS CATEGORIES VIEWS
+"""
+
+
+class TeamCategoryListView(BaseListView):
+    template_name = 'dashboard/team-category-list.html'
+
+    def get_queryset(self):
+        return Organization.objects.filter(owner=self.request.user)
+
+
+class TeamCategoryAddView(BaseCreateView):
+    form_class = TeamCategoryAddEditForm
+    template_name = 'dashboard/team-category-add.html'
+    success_url = reverse_lazy('team-category-list')
+
+
+class TeamCategoryEditView(BaseUpdateView):
+    model = TeamCategory
+    form_class = TeamCategoryAddEditForm
+    template_name = 'dashboard/team-category-edit.html'
+    success_url = reverse_lazy('team-category-list')
+
+
+class TeamCategoryDeleteView(BaseDeleteView):
+    model = TeamCategory
+    template_name = 'dashboard/team-category-delete.html'
+    success_url = reverse_lazy('team-category-list')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not TeamCategory.objects.filter(id=obj.id, organization__owner=self.request.user).exists():
+            raise PermissionError(self.permission_error)
+        return obj
+
+
+"""
+            TEAMS VIEWS
+"""
+
+
+class TeamListView(BaseListView):
+    template_name = 'dashboard/team-list.html'
+
+    def get_queryset(self):
+        return Organization.objects.filter(owner=self.request.user)
+
+
+class TeamAddView(BaseCreateView):
+    form_class = TeamAddEditForm
+    template_name = 'dashboard/team-add.html'
+    success_url = reverse_lazy('team-list')
+
+
+class TeamEditView(BaseUpdateView):
+    model = Team
+    form_class = TeamAddEditForm
+    template_name = 'dashboard/team-edit.html'
+    success_url = reverse_lazy('team-list')
+
+
+class TeamDeleteView(BaseDeleteView):
+    model = Team
+    template_name = 'dashboard/team-delete.html'
+    success_url = reverse_lazy('team-list')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not Team.objects.filter(id=obj.id, category__organization__owner=self.request.user).exists():
             raise PermissionError(self.permission_error)
         return obj

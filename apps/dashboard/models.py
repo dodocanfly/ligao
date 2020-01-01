@@ -16,6 +16,9 @@ class Organization(models.Model):
     def get_main_club_categories(self):
         return self.club_categories.filter(parent=None).order_by('name')
 
+    def get_main_team_categories(self):
+        return self.team_categories.filter(parent=None).order_by('name')
+
     def __str__(self):
         return self.name
 
@@ -155,6 +158,42 @@ class Club(models.Model):
     founded = models.IntegerField(null=True, blank=True, verbose_name=_('rok założenia'))
     description = models.TextField(null=True, blank=True, verbose_name=_('opis'))
     national = models.BooleanField(default=False, verbose_name=_('reprezentacja kraju'))
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
+class TeamCategory(CategoryNestedModel):
+    organization = models.ForeignKey(
+        Organization, verbose_name=_('organizacja'), on_delete=models.PROTECT,
+        related_name='team_categories'
+    )
+
+    @staticmethod
+    def related_items_exists(category):
+        return category.teams.filter(category=category).exists()
+
+    def get_teams(self):
+        return self.teams.filter(category=self)
+
+    class Meta:
+        verbose_name = _('kategoria zespołów')
+        verbose_name_plural = _('kategorie zespołów')
+
+
+class Team(models.Model):
+    category = models.ForeignKey(
+        TeamCategory, verbose_name=_('kategoria'), on_delete=models.PROTECT,
+        related_name='teams'
+    )
+    season = models.ForeignKey(Season, verbose_name=_('sezon'), on_delete=models.PROTECT, related_name='teams')
+    club = models.ForeignKey(Club, verbose_name=_('klub'), on_delete=models.PROTECT, related_name='teams')
+    name = models.CharField(max_length=50, verbose_name=_('pełna nazwa zespołu'))
+    short_name = models.CharField(max_length=25, null=True, blank=True, verbose_name=_('krótka nazwa zespołu'))
+    description = models.TextField(null=True, blank=True, verbose_name=_('opis'))
 
     def __str__(self):
         return self.name

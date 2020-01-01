@@ -21,4 +21,14 @@ urlpatterns = [
     path('kategorie-klubow/dodaj', views.ClubCategoryAddView.as_view(), name='club-category-add'),
     path('kategorie-klubow/edytuj/<int:pk>', views.ClubCategoryEditView.as_view(), name='club-category-edit'),
     path('kategorie-klubow/usun/<int:pk>', views.ClubCategoryDeleteView.as_view(), name='club-category-delete'),
+
+    path('zespoly/lista', views.TeamListView.as_view(), name='team-list'),
+    path('zespoly/dodaj', views.TeamAddView.as_view(), name='team-add'),
+    path('zespoly/edytuj/<int:pk>', views.TeamEditView.as_view(), name='team-edit'),
+    path('zespoly/usun/<int:pk>', views.TeamDeleteView.as_view(), name='team-delete'),
+
+    path('kategorie-zespolow/lista', views.TeamCategoryListView.as_view(), name='team-category-list'),
+    path('kategorie-zespolow/dodaj', views.TeamCategoryAddView.as_view(), name='team-category-add'),
+    path('kategorie-zespolow/edytuj/<int:pk>', views.TeamCategoryEditView.as_view(), name='team-category-edit'),
+    path('kategorie-zespolow/usun/<int:pk>', views.TeamCategoryDeleteView.as_view(), name='team-category-delete'),
 ]

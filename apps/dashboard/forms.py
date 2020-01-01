@@ -2,7 +2,7 @@ from django import forms
 from django.http import Http404
 from django.utils.html import mark_safe
 
-from apps.dashboard.models import Organization, Season, ClubCategory, Club
+from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team
 from .forms_config import FIELDS_ATTRS
 from .validators import valid_am_i_in_myself, valid_max_tree_depth, valid_same_organization, valid_can_change_org
 
@@ -139,3 +139,48 @@ class ClubAddEditForm(MyModelForm):
     class Meta:
         model = Club
         fields = ('id', 'category', 'country', 'name', 'founded', 'description', 'national')
+
+
+class TeamCategoryAddEditForm(MyModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        object_exists = TeamCategory.objects.filter(id=self.initial.get('id'), organization__owner=self.request.user).exists()
+        if self.initial and not object_exists:
+            raise Http404('object not exist for user')
+        self.fields['organization'].queryset = Organization.objects.filter(owner=self.request.user)
+        self.fields['organization'].validators = [valid_can_change_org(self.instance)]
+        if self.request.GET.get('o'):
+            self.fields['organization'].initial = self.request.GET.get('o')
+        self.fields['parent'] = NestedModelChoiceField(
+            queryset=TeamCategory.objects.filter(organization__owner=self.request.user).order_by('organization__name', 'name'),
+            validators=[
+                valid_am_i_in_myself(self.instance),
+                valid_max_tree_depth(self.instance),
+                valid_same_organization(self),
+            ],
+            required=False,
+        )
+        self.set_widget_attrs()
+
+    class Meta:
+        model = TeamCategory
+        fields = ('id', 'organization', 'name', 'parent')
+
+
+class TeamAddEditForm(MyModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        object_exists = Team.objects.filter(id=self.initial.get('id'), category__organization__owner=self.request.user).exists()
+        if self.initial and not object_exists:
+            raise Http404('object not exist for user')
+        self.fields['category'] = NestedModelChoiceField(
+            queryset=TeamCategory.objects.filter(organization__owner=self.request.user).order_by('organization__name', 'name'),
+        )
+        self.fields['season'].queryset = Season.objects.filter(organization__owner=self.request.user).order_by('name')
+        self.fields['club'].queryset = Club.objects.filter(category__organization__owner=self.request.user).order_by('name')
+        self.set_widget_attrs()
+
+    class Meta:
+        model = Team
+        fields = ('id', 'category', 'season', 'club', 'name', 'short_name', 'description')
