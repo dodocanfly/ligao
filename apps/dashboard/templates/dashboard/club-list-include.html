@@ -23,7 +23,7 @@
     {% empty %}
         <li>
             {% trans "nie ma jeszcze żadnej kategorii klubów w tej organizacji" %}
-            - <a href="{% url 'club-category-add' %}">{% trans "dodaj pierwszą" %}</a>
+            - <a href="{% url 'club-category-add' %}?o={{ org_id }}">{% trans "dodaj pierwszą" %}</a>
         </li>
     {% endfor %}
 </ol>
