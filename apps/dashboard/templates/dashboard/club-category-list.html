@@ -6,7 +6,7 @@
 {% block content %}
     {% for organization in object_list %}
         <h3>{{ organization.name }}</h3>
-        {% include 'dashboard/club-category-list-include.html' with categories=organization.get_main_club_categories %}
+        {% include 'dashboard/club-category-list-include.html' with categories=organization.get_main_club_categories org_id=organization.id %}
     {% empty %}
         <h3>
             {% trans "nie ma jeszcze żadnej organizacji, do której przypisane mogą być kategorie klubów" %}

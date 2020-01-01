@@ -5,8 +5,6 @@
             <a href="{% url "club-category-edit" category.id %}">{% trans "edytuj" %}</a>
             <a href="{% url "club-category-delete" category.id %}">{% trans "usuń" %}</a>
             <b>{{ category.name }}</b>
-{#            , distance_to_root={{ category.distance_to_root }}#}
-{#            , dtfl={{ category.distance_to_farthest_leaf }}#}
             {% if category.get_children %}
                 {% include 'dashboard/club-category-list-include.html' with categories=category.get_children %}
             {% endif %}
@@ -14,7 +12,7 @@
     {% empty %}
         <li>
             {% trans "nie ma jeszcze żadnej kategorii klubów w tej organizacji" %}
-            - <a href="{% url 'club-category-add' %}">{% trans "dodaj pierwszą" %}</a>
+            - <a href="{% url 'club-category-add' %}?o={{ org_id }}">{% trans "dodaj pierwszą" %}</a>
         </li>
     {% endfor %}
 </ol>

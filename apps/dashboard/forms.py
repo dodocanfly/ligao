@@ -49,7 +49,7 @@ class NestedModelChoiceField(forms.ModelChoiceField):
 
 class MyModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user')
+        self.request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
 
     def set_widget_attrs(self):
@@ -64,14 +64,14 @@ class OrganizationAddEditForm(MyModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        object_exists = Organization.objects.filter(id=self.initial.get('id'), owner=self.user).exists()
+        object_exists = Organization.objects.filter(id=self.initial.get('id'), owner=self.request.user).exists()
         if self.initial and not object_exists:
             raise Http404('object not exist for user')
         self.set_widget_attrs()
 
     def save(self, commit=True):
         organization = super().save(commit=False)
-        organization.owner = self.user
+        organization.owner = self.request.user
         if commit:
             organization.save()
         return organization
@@ -85,10 +85,10 @@ class SeasonAddEditForm(MyModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        object_exists = Season.objects.filter(id=self.initial.get('id'), organization__owner=self.user).exists()
+        object_exists = Season.objects.filter(id=self.initial.get('id'), organization__owner=self.request.user).exists()
         if self.initial and not object_exists:
             raise Http404('object not exist for user')
-        self.fields['organization'].queryset = Organization.objects.filter(owner=self.user)
+        self.fields['organization'].queryset = Organization.objects.filter(owner=self.request.user)
         self.set_widget_attrs()
 
     class Meta:
@@ -99,13 +99,15 @@ class SeasonAddEditForm(MyModelForm):
 class ClubCategoryAddEditForm(MyModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        object_exists = ClubCategory.objects.filter(id=self.initial.get('id'), organization__owner=self.user).exists()
+        object_exists = ClubCategory.objects.filter(id=self.initial.get('id'), organization__owner=self.request.user).exists()
         if self.initial and not object_exists:
             raise Http404('object not exist for user')
-        self.fields['organization'].queryset = Organization.objects.filter(owner=self.user)
+        self.fields['organization'].queryset = Organization.objects.filter(owner=self.request.user)
         self.fields['organization'].validators = [valid_can_change_org(self.instance)]
+        if self.request.GET.get('o'):
+            self.fields['organization'].initial = self.request.GET.get('o')
         self.fields['parent'] = NestedModelChoiceField(
-            queryset=ClubCategory.objects.filter(organization__owner=self.user).order_by('organization__name', 'name'),
+            queryset=ClubCategory.objects.filter(organization__owner=self.request.user).order_by('organization__name', 'name'),
             validators=[
                 valid_am_i_in_myself(self.instance),
                 valid_max_tree_depth(self.instance),
@@ -124,14 +126,14 @@ class ClubAddEditForm(MyModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        object_exists = Club.objects.filter(id=self.initial.get('id'), category__organization__owner=self.user).exists()
+        object_exists = Club.objects.filter(id=self.initial.get('id'), category__organization__owner=self.request.user).exists()
         if self.initial and not object_exists:
             raise Http404('object not exist for user')
         self.fields['category'] = NestedModelChoiceField(
-            queryset=ClubCategory.objects.filter(organization__owner=self.user).order_by('organization__name', 'name'),
+            queryset=ClubCategory.objects.filter(organization__owner=self.request.user).order_by('organization__name', 'name'),
         )
-        if not self.initial and self.user.default_country:
-            self.fields['country'].initial = self.user.default_country.id
+        if not self.initial and self.request.user.default_country:
+            self.fields['country'].initial = self.request.user.default_country.id
         self.set_widget_attrs()
 
     class Meta:
