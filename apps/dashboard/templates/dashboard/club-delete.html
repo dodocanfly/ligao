@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "Usuń klub" %}{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>{% trans "Na pewno chcesz usunąć wybrany klub?" %}</p>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger">{% trans "Tak, usuń" %}</button>
+    </form>
+{% endblock %}

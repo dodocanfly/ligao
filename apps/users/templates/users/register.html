@@ -13,16 +13,6 @@
                     </div>
                     <div class="login-form-body">
                         <div class="form-gp">
-                            {{ form.username.label_tag }}
-                            {{ form.username }}
-                            <i class="ti-user"></i>
-                            <div class="text-danger">
-                                {% for error in form.errors.username %}
-                                    <p class="text-danger">{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div class="form-gp">
                             {{ form.email.label_tag }}
                             {{ form.email }}
                             <i class="ti-email"></i>

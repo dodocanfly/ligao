@@ -10,7 +10,8 @@ def valid_max_tree_depth(current_category):
             distance_to_farthest_leaf = 0
         else:
             distance_to_farthest_leaf = current_category.distance_to_farthest_leaf()
-        total_depth = parent.distance_to_root() + distance_to_farthest_leaf + 2
+        distance_to_root = parent.distance_to_root()
+        total_depth = distance_to_root + distance_to_farthest_leaf + 2
         if total_depth > MAX_CAT_TREE_DEPTH:
             raise ValidationError(
                 _('Przekroczona maksymalna głębokość drzewa kategorii (maksymalna: %(max)s, aktualna: %(total)s)') %
@@ -22,7 +23,7 @@ def valid_max_tree_depth(current_category):
 def valid_am_i_in_myself(current_category):
     def inner_validator(parent):
         if current_category.id is not None and parent.am_i_in_myself(current_category):
-            raise ValidationError(_('Kategoria nadrzędna nie może leżeć poniżej kategorii edytowanej'))
+            raise ValidationError(_('Kategoria nadrzędna musi leżeć powyżej edytowanej kategorii'))
     return inner_validator
 
 

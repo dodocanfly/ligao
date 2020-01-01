@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View, generic
 
-from apps.dashboard.forms import OrganizationAddEditForm, SeasonAddEditForm, ClubCategoryAddEditForm
-from apps.dashboard.models import Organization, Season, ClubCategory
+from apps.dashboard.forms import OrganizationAddEditForm, SeasonAddEditForm, ClubCategoryAddEditForm, ClubAddEditForm
+from apps.dashboard.models import Organization, Season, ClubCategory, Club
 
 
 class IndexView(View):
@@ -156,5 +156,42 @@ class ClubCategoryDeleteView(BaseDeleteView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if not ClubCategory.objects.filter(id=obj.id, organization__owner=self.request.user).exists():
+            raise PermissionError(self.permission_error)
+        return obj
+
+
+"""
+            CLUBS VIEWS
+"""
+
+
+class ClubListView(BaseListView):
+    template_name = 'dashboard/club-list.html'
+
+    def get_queryset(self):
+        return Club.objects.filter(category__organization__owner=self.request.user)
+
+
+class ClubAddView(BaseCreateView):
+    form_class = ClubAddEditForm
+    template_name = 'dashboard/club-add.html'
+    success_url = reverse_lazy('club-list')
+
+
+class ClubEditView(BaseUpdateView):
+    model = Club
+    form_class = ClubAddEditForm
+    template_name = 'dashboard/club-edit.html'
+    success_url = reverse_lazy('club-list')
+
+
+class ClubDeleteView(BaseDeleteView):
+    model = Club
+    template_name = 'dashboard/club-delete.html'
+    success_url = reverse_lazy('club-list')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not Club.objects.filter(id=obj.id, category__organization__owner=self.request.user).exists():
             raise PermissionError(self.permission_error)
         return obj

@@ -10,12 +10,12 @@ urlpatterns = [
     path('sezony/lista', views.SeasonListView.as_view(), name='season-list'),
     path('sezony/dodaj', views.SeasonAddView.as_view(), name='season-add'),
     path('sezony/edytuj/<int:pk>', views.SeasonEditView.as_view(), name='season-edit'),
-    path('sezony/usun/<int:pk>', views.OrganizationDeleteView.as_view(), name='season-delete'),
+    path('sezony/usun/<int:pk>', views.SeasonDeleteView.as_view(), name='season-delete'),
 
-    path('kluby/lista', views.SeasonListView.as_view(), name='club-list'),
-    path('kluby/dodaj', views.SeasonAddView.as_view(), name='club-add'),
-    path('kluby/edytuj/<int:pk>', views.SeasonEditView.as_view(), name='club-edit'),
-    path('kluby/usun/<int:pk>', views.OrganizationDeleteView.as_view(), name='club-delete'),
+    path('kluby/lista', views.ClubListView.as_view(), name='club-list'),
+    path('kluby/dodaj', views.ClubAddView.as_view(), name='club-add'),
+    path('kluby/edytuj/<int:pk>', views.ClubEditView.as_view(), name='club-edit'),
+    path('kluby/usun/<int:pk>', views.ClubDeleteView.as_view(), name='club-delete'),
 
     path('kategorie-klubow/lista', views.ClubCategoryListView.as_view(), name='club-category-list'),
     path('kategorie-klubow/dodaj', views.ClubCategoryAddView.as_view(), name='club-category-add'),

@@ -2,7 +2,7 @@ from django import forms
 from django.http import Http404
 from django.utils.html import mark_safe
 
-from apps.dashboard.models import Organization, Season, ClubCategory
+from apps.dashboard.models import Organization, Season, ClubCategory, Club
 from .forms_config import FIELDS_ATTRS
 from .validators import valid_am_i_in_myself, valid_max_tree_depth, valid_same_organization, valid_can_change_org
 
@@ -111,9 +111,29 @@ class ClubCategoryAddEditForm(MyModelForm):
                 valid_max_tree_depth(self.instance),
                 valid_same_organization(self),
             ],
+            required=False,
         )
         self.set_widget_attrs()
 
     class Meta:
         model = ClubCategory
-        fields = '__all__'
+        fields = ('id', 'organization', 'name', 'parent')
+
+
+class ClubAddEditForm(MyModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        object_exists = Club.objects.filter(id=self.initial.get('id'), category__organization__owner=self.user).exists()
+        if self.initial and not object_exists:
+            raise Http404('object not exist for user')
+        self.fields['category'] = NestedModelChoiceField(
+            queryset=ClubCategory.objects.filter(organization__owner=self.user).order_by('organization__name', 'name'),
+        )
+        if not self.initial:
+            self.fields['country'].initial = self.user.default_country.id
+        self.set_widget_attrs()
+
+    class Meta:
+        model = Club
+        fields = ('id', 'category', 'country', 'name', 'founded', 'description', 'national')

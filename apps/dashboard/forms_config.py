@@ -55,4 +55,29 @@ FIELDS_ATTRS = {
         },
     },
 
+    'ClubAddEditForm': {
+        'category': {
+            'class': 'form-control',
+        },
+        'country': {
+            'class': 'form-control',
+        },
+        'name': {
+            'class': 'form-control',
+            'minlength': 5,
+            'placeholder': _('np. UKS Umizgi'),
+        },
+        'founded': {
+            'class': 'form-control',
+            'placeholder': _('np. 1997'),
+        },
+        'description': {
+            'class': 'form-control',
+            'rows': 5,
+        },
+        'national': {
+            'class': 'form-check-input',
+        },
+    },
+
 }
