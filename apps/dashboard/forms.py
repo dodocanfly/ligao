@@ -130,7 +130,7 @@ class ClubAddEditForm(MyModelForm):
         self.fields['category'] = NestedModelChoiceField(
             queryset=ClubCategory.objects.filter(organization__owner=self.user).order_by('organization__name', 'name'),
         )
-        if not self.initial:
+        if not self.initial and self.user.default_country:
             self.fields['country'].initial = self.user.default_country.id
         self.set_widget_attrs()
 

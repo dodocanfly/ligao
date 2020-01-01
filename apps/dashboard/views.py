@@ -169,7 +169,8 @@ class ClubListView(BaseListView):
     template_name = 'dashboard/club-list.html'
 
     def get_queryset(self):
-        return Club.objects.filter(category__organization__owner=self.request.user)
+        return Organization.objects.filter(owner=self.request.user)
+        # return Club.objects.filter(category__organization__owner=self.request.user)
 
 
 class ClubAddView(BaseCreateView):

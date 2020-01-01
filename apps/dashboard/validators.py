@@ -31,7 +31,7 @@ def valid_same_organization(form):
     def inner_validator(parent):
         curr_cat_organization = form.cleaned_data.get('organization')
         if curr_cat_organization is not None and parent.organization_id != curr_cat_organization.id:
-            raise ValidationError(_('Kategorie obecna i nadrzędna należą do różnych organizacji'))
+            raise ValidationError(_('Kategorie edytowana i nadrzędna należą do różnych organizacji'))
     return inner_validator
 
 

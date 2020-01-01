@@ -4,7 +4,10 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Organization(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('właściciel'), on_delete=models.PROTECT, related_name='organizations')
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name=_('właściciel'),
+        on_delete=models.PROTECT, related_name='organizations'
+    )
     name = models.CharField(verbose_name=_('nazwa organizacji'), max_length=50)
     description = models.TextField(verbose_name=_('opis organizacji'), max_length=1000, null=True, blank=True)
     location = models.CharField(verbose_name=_('lokalizacja / miasto'), max_length=50, null=True, blank=True)
@@ -35,7 +38,10 @@ class Country(models.Model):
 
 
 class Season(models.Model):
-    organization = models.ForeignKey(Organization, verbose_name=_('organizacja'), on_delete=models.PROTECT, related_name='seasons')
+    organization = models.ForeignKey(
+        Organization, verbose_name=_('organizacja'), on_delete=models.PROTECT,
+        related_name='seasons'
+    )
     name = models.CharField(verbose_name=_('nazwa sezonu'), max_length=50)
     start_year = models.IntegerField(verbose_name=_('rok rozpoczęcia'))
     double_year = models.BooleanField(verbose_name=_('rozgrywki w dwóch latach'), default=True)
@@ -58,7 +64,22 @@ class CategoryNestedModel(models.Model):
 
     @classmethod
     def get_objects(cls, parent):
-        return cls.objects.filter(parent=parent)
+        return cls.objects.filter(parent=parent).order_by('name')
+
+    # method must be overridden in the inherited class
+    @staticmethod
+    def related_items_exists(category):
+        # return category.related_field_name.filter(category=category).exists()
+        pass
+
+    def has_items(self):
+        def inner_checker(queryset):
+            if queryset.exists():
+                for field in queryset:
+                    if field.related_items_exists(field) or inner_checker(self.get_objects(field)):
+                        return True
+            return False
+        return self.related_items_exists(self) or inner_checker(self.get_objects(self))
 
     def get_children(self):
         return self.get_objects(self)
@@ -82,9 +103,7 @@ class CategoryNestedModel(models.Model):
                     level_counter = sub_counter if sub_counter > counter else level_counter
                 counter = level_counter if level_counter > counter else counter
             return counter
-
-        qs = self.get_objects(self)
-        return inner_counter(qs)
+        return inner_counter(self.get_objects(self))
 
     def am_i_in_myself(self, myself):
         category = self
@@ -111,14 +130,27 @@ class ClubCategory(CategoryNestedModel):
         related_name='club_categories'
     )
 
+    @staticmethod
+    def related_items_exists(category):
+        return category.clubs.filter(category=category).exists()
+
+    def get_clubs(self):
+        return self.clubs.filter(category=self)
+
     class Meta:
         verbose_name = _('kategoria klubów')
         verbose_name_plural = _('kategorie klubów')
 
 
 class Club(models.Model):
-    category = models.ForeignKey(ClubCategory, verbose_name=_('kategoria'), on_delete=models.PROTECT, related_name='clubs')
-    country = models.ForeignKey(Country, verbose_name=_('kraj'), null=True, blank=True, on_delete=models.PROTECT, related_name='clubs')
+    category = models.ForeignKey(
+        ClubCategory, verbose_name=_('kategoria'), on_delete=models.PROTECT,
+        related_name='clubs'
+    )
+    country = models.ForeignKey(
+        Country, verbose_name=_('kraj'), null=True, blank=True,
+        on_delete=models.PROTECT, related_name='clubs'
+    )
     name = models.CharField(max_length=50, verbose_name=_('nazwa klubu'))
     founded = models.IntegerField(null=True, blank=True, verbose_name=_('rok założenia'))
     description = models.TextField(null=True, blank=True, verbose_name=_('opis'))
