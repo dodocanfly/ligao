@@ -80,4 +80,43 @@ FIELDS_ATTRS = {
         },
     },
 
+    'TeamCategoryAddEditForm': {
+        'name': {
+            'class': 'form-control',
+            'minlength': 5,
+            'placeholder': _('np. ligi zakładowe'),
+        },
+        'organization': {
+            'class': 'form-control',
+        },
+        'parent': {
+            'class': 'form-control',
+        },
+    },
+
+    'TeamAddEditForm': {
+        'category': {
+            'class': 'form-control',
+        },
+        'season': {
+            'class': 'form-control',
+        },
+        'club': {
+            'class': 'form-control',
+        },
+        'name': {
+            'class': 'form-control',
+            'minlength': 5,
+            'placeholder': _('np. Team Cresovia Górowo Iławeckie'),
+        },
+        'short_name': {
+            'class': 'form-control',
+            'placeholder': _('np. Cresovia Górowo Iław.'),
+        },
+        'description': {
+            'class': 'form-control',
+            'rows': 5,
+        },
+    },
+
 }
