@@ -103,7 +103,7 @@ class Organization(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ('name',)
         verbose_name = _('organizacja')
         verbose_name_plural = _('organizacje')
 
@@ -117,7 +117,7 @@ class Country(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ('name',)
 
 
 class Season(models.Model):
@@ -133,7 +133,8 @@ class Season(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        unique_together = ('organization', 'name')
+        ordering = ('name',)
         verbose_name = _('sezon rozgrywek')
         verbose_name_plural = _('sezony rozgrywek')
 
@@ -206,8 +207,8 @@ class CategoryNestedModel(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
-        unique_together = ['organization', 'parent', 'name']
+        unique_together = ('organization', 'parent', 'name')
+        ordering = ('name',)
         abstract = True
 
 
@@ -247,7 +248,8 @@ class Club(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        unique_together = ('category', 'name')
+        ordering = ('name',)
 
 
 class TeamCategory(CategoryNestedModel):
@@ -283,7 +285,8 @@ class Team(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        unique_together = ('category', 'name')
+        ordering = ('name',)
 
 
 class GameCategory(CategoryNestedModel):

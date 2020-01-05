@@ -207,7 +207,9 @@ class ClubListView(LoginRequiredMixin, View):
 class ClubAddView(BaseCreateView):
     form_class = ClubAddEditForm
     template_name = 'dashboard/club-add.html'
-    success_url = reverse_lazy('club-list')
+
+    def get_success_url(self):
+        return reverse_lazy('club-add') if self.request.POST.get('saveandadd') else reverse_lazy('club-list')
 
 
 class ClubEditView(BaseUpdateView):
