@@ -38,6 +38,14 @@ class Organization(models.Model):
         return cls.get_one(owner, organization_id).annotate(counter=models.Count('team_categories')).filter(counter__gt=0)
 
     @classmethod
+    def get_all_with_game_categories(cls, owner):
+        return cls.get_all(owner).annotate(counter=models.Count('game_categories')).filter(counter__gt=0)
+
+    @classmethod
+    def get_one_with_game_categories(cls, owner, organization_id):
+        return cls.get_one(owner, organization_id).annotate(counter=models.Count('game_categories')).filter(counter__gt=0)
+
+    @classmethod
     def get_all_with_clubs(cls, owner):
         return cls.get_all(owner).annotate(counter=models.Count('club_categories__clubs')).filter(counter__gt=0)
 
@@ -51,7 +59,15 @@ class Organization(models.Model):
 
     @classmethod
     def get_one_with_teams(cls, owner, organization_id):
-        return cls.get_one(owner, organization_id).annotate(counter=models.Count('team_categories__clubs')).filter(counter__gt=0)
+        return cls.get_one(owner, organization_id).annotate(counter=models.Count('team_categories__teams')).filter(counter__gt=0)
+
+    @classmethod
+    def get_all_with_games(cls, owner):
+        return cls.get_all(owner).annotate(counter=models.Count('game_categories__games')).filter(counter__gt=0)
+
+    @classmethod
+    def get_one_with_games(cls, owner, organization_id):
+        return cls.get_one(owner, organization_id).annotate(counter=models.Count('game_categories__games')).filter(counter__gt=0)
 
     def get_main_club_categories(self):
         return self.club_categories.filter(parent=None).order_by('name')
@@ -69,6 +85,16 @@ class Organization(models.Model):
     def get_main_team_categories_with_items(self):
         ret_cats = []
         for category in self.get_main_team_categories():
+            if category.has_items():
+                ret_cats.append(category)
+        return ret_cats
+
+    def get_main_game_categories(self):
+        return self.game_categories.filter(parent=None).order_by('name')
+
+    def get_main_game_categories_with_items(self):
+        ret_cats = []
+        for category in self.get_main_game_categories():
             if category.has_items():
                 ret_cats.append(category)
         return ret_cats
@@ -258,3 +284,21 @@ class Team(models.Model):
 
     class Meta:
         ordering = ['name']
+
+
+class GameCategory(CategoryNestedModel):
+    organization = models.ForeignKey(
+        Organization, verbose_name=_('organizacja'), on_delete=models.PROTECT,
+        related_name='game_categories'
+    )
+
+    @staticmethod
+    def related_items_exists(category):
+        return category.games.filter(category=category).exists()
+
+    def get_games(self):
+        return self.games.filter(category=self)
+
+    class Meta:
+        verbose_name = _('kategoria rozgrywek')
+        verbose_name_plural = _('kategorie rozgrywek')

@@ -2,7 +2,7 @@ from django import forms
 from django.http import Http404
 from django.utils.html import mark_safe
 
-from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team
+from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team, GameCategory
 from .forms_config import FIELDS_ATTRS
 from .validators import valid_am_i_in_myself, valid_max_tree_depth, valid_same_organization, valid_can_change_org, \
     valid_cat_is_leaf
@@ -53,10 +53,12 @@ class MyModelForm(forms.ModelForm):
         self.request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
 
-    def set_widget_attrs(self):
+    def set_widget_attrs(self, source=None):
+        if source is None:
+            source = FIELDS_ATTRS
         model_key = self.__class__.__name__
-        if model_key in FIELDS_ATTRS:
-            for field, attrs in FIELDS_ATTRS[model_key].items():
+        if model_key in source:
+            for field, attrs in source[model_key].items():
                 if field in self.fields:
                     self.fields[field].widget.attrs = attrs
 
@@ -187,3 +189,29 @@ class TeamAddEditForm(MyModelForm):
     class Meta:
         model = Team
         fields = ('id', 'category', 'season', 'club', 'name', 'short_name', 'description')
+
+
+class GameCategoryAddEditForm(MyModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        object_exists = GameCategory.objects.filter(id=self.initial.get('id'), organization__owner=self.request.user).exists()
+        if self.initial and not object_exists:
+            raise Http404('object not exist for user')
+        self.fields['organization'].queryset = Organization.objects.filter(owner=self.request.user)
+        self.fields['organization'].validators = [valid_can_change_org(self.instance)]
+        if self.request.GET.get('o'):
+            self.fields['organization'].initial = self.request.GET.get('o')
+        self.fields['parent'] = NestedModelChoiceField(
+            queryset=GameCategory.objects.filter(organization__owner=self.request.user).order_by('organization__name', 'name'),
+            validators=[
+                valid_am_i_in_myself(self.instance),
+                valid_max_tree_depth(self.instance),
+                valid_same_organization(self),
+            ],
+            required=False,
+        )
+        self.set_widget_attrs()
+
+    class Meta:
+        model = GameCategory
+        fields = ('id', 'organization', 'name', 'parent')

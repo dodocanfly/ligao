@@ -31,4 +31,9 @@ urlpatterns = [
     path('kategorie-zespolow/dodaj', views.TeamCategoryAddView.as_view(), name='team-category-add'),
     path('kategorie-zespolow/edytuj/<int:pk>', views.TeamCategoryEditView.as_view(), name='team-category-edit'),
     path('kategorie-zespolow/usun/<int:pk>', views.TeamCategoryDeleteView.as_view(), name='team-category-delete'),
+
+    path('kategorie-rozgrywek/lista', views.GameCategoryListView.as_view(), name='game-category-list'),
+    path('kategorie-rozgrywek/dodaj', views.GameCategoryAddView.as_view(), name='game-category-add'),
+    path('kategorie-rozgrywek/edytuj/<int:pk>', views.GameCategoryEditView.as_view(), name='game-category-edit'),
+    path('kategorie-rozgrywek/usun/<int:pk>', views.GameCategoryDeleteView.as_view(), name='game-category-delete'),
 ]

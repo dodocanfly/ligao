@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "Lista rozgrywek" %}{% endblock %}
+
+{% block content %}
+    <ol class="cat-list">
+        {% for organization in object_list %}
+            <li>
+                <a href="{% url "game-list" %}?o={{ organization.id }}">{{ organization.name }}</a>
+                {% include 'volleyball/game-list-include.html' with categories=organization.get_main_game_categories_with_items %}
+            </li>
+        {% empty %}
+            <li>
+                {% trans "nie ma organizacji/kategorii rozgrywek, do której przypisane są rozgrywki" %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

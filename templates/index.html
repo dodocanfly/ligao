@@ -23,13 +23,6 @@
                                     <li{% activeclass "organizacje/dodaj" %}><a href="{% url 'organization-add' %}">Dodaj organizację</a></li>
                                 </ul>
                             </li>
-                            <li{% activeclass "sezony" %}>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Sezony</span></a>
-                                <ul class="collapse">
-                                    <li{% activeclass "sezony/lista" %}><a href="{% url 'season-list' %}">Lista sezonów</a></li>
-                                    <li{% activeclass "sezony/dodaj" %}><a href="{% url 'season-add' %}">Dodaj sezon</a></li>
-                                </ul>
-                            </li>
                             <li{% activeclass "klub" %}>
                                 <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Kluby</span></a>
                                 <ul class="collapse">
@@ -37,6 +30,13 @@
                                     <li{% activeclass "kluby/dodaj" %}><a href="{% url 'club-add' %}">Dodaj klub</a></li>
                                     <li{% activeclass "kategorie-klubow/lista" %}><a href="{% url 'club-category-list' %}">Lista kategorii</a></li>
                                     <li{% activeclass "kategorie-klubow/dodaj" %}><a href="{% url 'club-category-add' %}">Dodaj kategorię</a></li>
+                                </ul>
+                            </li>
+                            <li{% activeclass "sezony" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Sezony</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "sezony/lista" %}><a href="{% url 'season-list' %}">Lista sezonów</a></li>
+                                    <li{% activeclass "sezony/dodaj" %}><a href="{% url 'season-add' %}">Dodaj sezon</a></li>
                                 </ul>
                             </li>
                             <li{% activeclass "zespol" %}>
@@ -48,20 +48,27 @@
                                     <li{% activeclass "kategorie-zespolow/dodaj" %}><a href="{% url 'team-category-add' %}">Dodaj kategorię</a></li>
                                 </ul>
                             </li>
+                            <li{% activeclass "rozgryw" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Rozgrywki</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "rozgrywki/lista" %}><a href="{% url 'game-list' %}">Lista rozgrywek</a></li>
+                                    <li{% activeclass "rozgrywki/dodaj" %}><a href="{% url 'game-add' %}">Dodaj rozgrywkę</a></li>
+                                    <li{% activeclass "kategorie-rozgrywek/lista" %}><a href="{% url 'game-category-list' %}">Lista kategorii</a></li>
+                                    <li{% activeclass "kategorie-rozgrywek/dodaj" %}><a href="{% url 'game-category-add' %}">Dodaj kategorię</a></li>
+                                </ul>
+                            </li>
                             <li><a href="#"><i class="ti-map-alt"></i><span>Not expanding</span></a></li>
                             <li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-align-left"></i><span>Multi level menu</span></a>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-align-left"></i><span>Dyscypliny</span></a>
                                 <ul class="collapse">
-                                    <li><a href="#">Item level (1)</a></li>
-                                    <li><a href="#">Item level (1)</a></li>
-                                    <li><a href="#" aria-expanded="true">Item level (1)</a>
+                                    <li><a href="#" aria-expanded="true">Siatkówka</a>
                                         <ul class="collapse">
-                                            <li><a href="#">Item level (2)</a></li>
-                                            <li><a href="#">Item level (2)</a></li>
-                                            <li><a href="#">Item level (2)</a></li>
+                                            <li><a href="#">Lista rozgrywek</a></li>
+                                            <li><a href="#">Dodaj rozgrywkę</a></li>
+                                            <li><a href="#">Systemy gry</a></li>
+                                            <li><a href="#">Dodaj system</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="#">Item level (1)</a></li>
                                 </ul>
                             </li>
                         </ul>

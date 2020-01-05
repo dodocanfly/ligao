@@ -119,4 +119,18 @@ FIELDS_ATTRS = {
         },
     },
 
+    'GameCategoryAddEditForm': {
+        'name': {
+            'class': 'form-control',
+            'minlength': 4,
+            'placeholder': _('np. powiatowa liga siatkówki'),
+        },
+        'organization': {
+            'class': 'form-control',
+        },
+        'parent': {
+            'class': 'form-control',
+        },
+    },
+
 }

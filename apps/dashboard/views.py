@@ -6,8 +6,8 @@ from django.urls import reverse_lazy
 from django.views import View, generic
 
 from apps.dashboard.forms import OrganizationAddEditForm, SeasonAddEditForm, ClubCategoryAddEditForm, ClubAddEditForm, \
-    TeamCategoryAddEditForm, TeamAddEditForm
-from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team
+    TeamCategoryAddEditForm, TeamAddEditForm, GameCategoryAddEditForm
+from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team, GameCategory
 
 
 class IndexView(View):
@@ -303,5 +303,44 @@ class TeamDeleteView(BaseDeleteView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if not Team.objects.filter(id=obj.id, category__organization__owner=self.request.user).exists():
+            raise PermissionError(self.permission_error)
+        return obj
+
+
+"""
+##############################################################################
+                            GAME CATEGORIES VIEWS
+##############################################################################
+"""
+
+
+class GameCategoryListView(BaseListView):
+    template_name = 'dashboard/game_category-list.html'
+
+    def get_queryset(self):
+        return Organization.get_all_with_game_categories(self.request.user)
+
+
+class GameCategoryAddView(BaseCreateView):
+    form_class = GameCategoryAddEditForm
+    template_name = 'dashboard/game_category-add.html'
+    success_url = reverse_lazy('game-category-list')
+
+
+class GameCategoryEditView(BaseUpdateView):
+    model = GameCategory
+    form_class = GameCategoryAddEditForm
+    template_name = 'dashboard/game_category-edit.html'
+    success_url = reverse_lazy('game-category-list')
+
+
+class GameCategoryDeleteView(BaseDeleteView):
+    model = GameCategory
+    template_name = 'dashboard/game_category-delete.html'
+    success_url = reverse_lazy('game-category-list')
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not GameCategory.objects.filter(id=obj.id, organization__owner=self.request.user).exists():
             raise PermissionError(self.permission_error)
         return obj

@@ -1,0 +1,8 @@
+{% extends 'index.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "Lista rozgrywek" %}{% endblock %}
+
+{% block content %}
+    {% include 'volleyball/game-list-include.html' with categories=object_list %}
+{% endblock %}

@@ -1,8 +1,8 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 from apps.dashboard.models import (
     CategoryNestedModel,
+    GameCategory,
     Organization,
     Season,
     Team,
@@ -32,33 +32,14 @@ class ScoringSystem(models.Model):
         return self.name
 
 
-class GameCategory(CategoryNestedModel):
-    organization = models.ForeignKey(
-        Organization, verbose_name=_('organizacja'), on_delete=models.PROTECT,
-        related_name='game_categories'
-    )
-
-    @staticmethod
-    def related_items_exists(category):
-        return category.games.filter(category=category).exists()
-
-    def get_games(self):
-        return self.games.filter(category=self)
-
-    class Meta:
-        verbose_name = _('kategoria rozgrywek')
-        verbose_name_plural = _('kategorie rozgrywek')
-
-
 class Game(models.Model):
     UP_TO_SETS_CHOICES = (
         (2, 2),
         (3, 3),
     )
 
-    organization = models.ForeignKey(Organization, related_name='games', on_delete=models.PROTECT)
-    season = models.ForeignKey(Season, related_name='games', on_delete=models.PROTECT)
     category = models.ForeignKey(GameCategory, related_name='games', on_delete=models.PROTECT)
+    season = models.ForeignKey(Season, related_name='games', on_delete=models.PROTECT)
     name = models.CharField(max_length=50)
     teams = models.ManyToManyField(Team, related_name='games')
     up_to_sets = models.SmallIntegerField(choices=UP_TO_SETS_CHOICES, verbose_name='do ilu setów')
@@ -94,4 +75,4 @@ class Match(models.Model):
         ordering = ['round', 'order']
 
     def __str__(self):
-        return self.host_team.short_name + ' - ' + self.guest_team.short_name
+        return self.host_team.name + ' - ' + self.guest_team.name
