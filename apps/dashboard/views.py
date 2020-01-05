@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import ProtectedError
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, Http404
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View, generic
@@ -16,7 +16,9 @@ class IndexView(View):
 
 
 """
-            BASE GENERIC VIEWS
+##############################################################################
+                             BASE GENERIC VIEWS
+##############################################################################
 """
 
 
@@ -50,7 +52,9 @@ class BaseDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 
 """
-            ORGANIZATIONS VIEWS
+##############################################################################
+                             ORGANIZATIONS VIEWS
+##############################################################################
 """
 
 
@@ -87,7 +91,9 @@ class OrganizationDeleteView(BaseDeleteView):
 
 
 """
-            SEASONS VIEWS
+##############################################################################
+                               SEASONS VIEWS
+##############################################################################
 """
 
 
@@ -124,33 +130,46 @@ class SeasonDeleteView(BaseDeleteView):
 
 
 """
-            CLUB CATEGORIES VIEWS
+##############################################################################
+                            CLUB CATEGORIES VIEWS
+##############################################################################
 """
 
 
-class ClubCategoryListView(BaseListView):
-    template_name = 'dashboard/club-category-list.html'
-
-    def get_queryset(self):
-        return Organization.objects.filter(owner=self.request.user)
+class ClubCategoryListView(LoginRequiredMixin, View):
+    def get(self, request):
+        template_name = 'dashboard/club_category-list.html'
+        try:
+            if request.GET.get('c'):
+                template_name = 'dashboard/club_category-list-eq.html'
+                object_list = ClubCategory.get_one(request.user, request.GET.get('c'))
+            elif request.GET.get('o'):
+                object_list = Organization.get_one_with_club_categories(request.user, request.GET.get('o'))
+            else:
+                object_list = Organization.get_all_with_club_categories(request.user)
+        except ValueError:
+            raise Http404()
+        return render(request, template_name, {
+            'object_list': object_list,
+        })
 
 
 class ClubCategoryAddView(BaseCreateView):
     form_class = ClubCategoryAddEditForm
-    template_name = 'dashboard/club-category-add.html'
+    template_name = 'dashboard/club_category-add.html'
     success_url = reverse_lazy('club-category-list')
 
 
 class ClubCategoryEditView(BaseUpdateView):
     model = ClubCategory
     form_class = ClubCategoryAddEditForm
-    template_name = 'dashboard/club-category-edit.html'
+    template_name = 'dashboard/club_category-edit.html'
     success_url = reverse_lazy('club-category-list')
 
 
 class ClubCategoryDeleteView(BaseDeleteView):
     model = ClubCategory
-    template_name = 'dashboard/club-category-delete.html'
+    template_name = 'dashboard/club_category-delete.html'
     success_url = reverse_lazy('club-category-list')
 
     def get_object(self, queryset=None):
@@ -161,15 +180,28 @@ class ClubCategoryDeleteView(BaseDeleteView):
 
 
 """
-            CLUBS VIEWS
+##############################################################################
+                                 CLUBS VIEWS
+##############################################################################
 """
 
 
-class ClubListView(BaseListView):
-    template_name = 'dashboard/club-list.html'
-
-    def get_queryset(self):
-        return Organization.objects.filter(owner=self.request.user)
+class ClubListView(LoginRequiredMixin, View):
+    def get(self, request):
+        template_name = 'dashboard/club-list.html'
+        try:
+            if request.GET.get('c'):
+                template_name = 'dashboard/club-list-eq.html'
+                object_list = ClubCategory.get_one(request.user, request.GET.get('c'))
+            elif request.GET.get('o'):
+                object_list = Organization.get_one_with_clubs(request.user, request.GET.get('o'))
+            else:
+                object_list = Organization.get_all_with_clubs(request.user)
+        except ValueError:
+            raise Http404()
+        return render(request, template_name, {
+            'object_list': object_list,
+        })
 
 
 class ClubAddView(BaseCreateView):
@@ -198,33 +230,35 @@ class ClubDeleteView(BaseDeleteView):
 
 
 """
-            TEAMS CATEGORIES VIEWS
+##############################################################################
+                            TEAM CATEGORIES VIEWS
+##############################################################################
 """
 
 
 class TeamCategoryListView(BaseListView):
-    template_name = 'dashboard/team-category-list.html'
+    template_name = 'dashboard/team_category-list.html'
 
     def get_queryset(self):
-        return Organization.objects.filter(owner=self.request.user)
+        return Organization.get_all_with_team_categories(self.request.user)
 
 
 class TeamCategoryAddView(BaseCreateView):
     form_class = TeamCategoryAddEditForm
-    template_name = 'dashboard/team-category-add.html'
+    template_name = 'dashboard/team_category-add.html'
     success_url = reverse_lazy('team-category-list')
 
 
 class TeamCategoryEditView(BaseUpdateView):
     model = TeamCategory
     form_class = TeamCategoryAddEditForm
-    template_name = 'dashboard/team-category-edit.html'
+    template_name = 'dashboard/team_category-edit.html'
     success_url = reverse_lazy('team-category-list')
 
 
 class TeamCategoryDeleteView(BaseDeleteView):
     model = TeamCategory
-    template_name = 'dashboard/team-category-delete.html'
+    template_name = 'dashboard/team_category-delete.html'
     success_url = reverse_lazy('team-category-list')
 
     def get_object(self, queryset=None):
@@ -235,7 +269,9 @@ class TeamCategoryDeleteView(BaseDeleteView):
 
 
 """
-            TEAMS VIEWS
+##############################################################################
+                                 TEAMS VIEWS
+##############################################################################
 """
 
 
@@ -243,7 +279,7 @@ class TeamListView(BaseListView):
     template_name = 'dashboard/team-list.html'
 
     def get_queryset(self):
-        return Organization.objects.filter(owner=self.request.user)
+        return Organization.get_all_with_teams(self.request.user)
 
 
 class TeamAddView(BaseCreateView):

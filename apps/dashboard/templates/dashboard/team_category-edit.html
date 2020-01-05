@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h4 class="header-title">{% trans "Edytuj kategorię zespołów" %}</h4>
                 <form method="post">
-                    {% include "dashboard/team-category-form.html" %}
+                    {% include "dashboard/team_category-form.html" %}
                     <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans "zapisz zmiany" %}</button>
                     {% csrf_token %}
                 </form>

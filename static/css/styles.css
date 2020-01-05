@@ -2845,3 +2845,29 @@ ul.errorlist {
     font-size: 0.9em;
     color: #f00;
 }
+
+ol.cat-list {
+    margin: 5px 0 5px 30px;
+}
+
+a.cat-list-btn {
+    padding: 2px 10px;
+    margin: 2px 0 2px 2px;
+    font-size: 12px;
+    color: #fff;
+    background: #17a2b8;
+    border-radius: 5px;
+}
+a:hover.cat-list-btn {
+    background: #138496;
+    border-color: #117a8b;
+}
+a.cl-btn-2 {
+    color: #fff;
+    margin-left: 0;
+    background: #dc3545;
+}
+a:hover.cl-btn-2 {
+    background: #c82333;;
+    border-color: #bd2130;
+}

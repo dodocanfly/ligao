@@ -9,7 +9,7 @@
             <div class="card-body">
                 <h4 class="header-title">{% trans "Dodaj kategorię klubów" %}</h4>
                 <form method="post">
-                    {% include "dashboard/club-category-form.html" %}
+                    {% include "dashboard/club_category-form.html" %}
                     <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans "dodaj kategorię" %}</button>
                     {% csrf_token %}
                 </form>

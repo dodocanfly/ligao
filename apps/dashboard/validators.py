@@ -23,7 +23,7 @@ def valid_max_tree_depth(current_category):
 def valid_am_i_in_myself(current_category):
     def inner_validator(parent):
         if current_category.id is not None and parent.am_i_in_myself(current_category):
-            raise ValidationError(_('Kategoria nadrzędna musi leżeć powyżej edytowanej kategorii'))
+            raise ValidationError(_('Kategoria nadrzędna musi leżeć poza kategorią edytowaną'))
     return inner_validator
 
 
@@ -40,3 +40,9 @@ def valid_can_change_org(instance):
         if instance.id is not None and instance.get_children() and instance.organization_id != organization.id:
             raise ValidationError(_('Nie można zmienić organizacji kategorii posiadającej podkategorię'))
     return inner_validator
+
+
+def valid_cat_is_leaf(category):
+    if category.get_children():
+        raise ValidationError(_('Klub/zespół można dodać tylko do kategorii "liści" (nieposiadających podkategorii)'))
+    return category

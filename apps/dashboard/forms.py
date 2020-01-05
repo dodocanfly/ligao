@@ -4,7 +4,8 @@ from django.utils.html import mark_safe
 
 from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team
 from .forms_config import FIELDS_ATTRS
-from .validators import valid_am_i_in_myself, valid_max_tree_depth, valid_same_organization, valid_can_change_org
+from .validators import valid_am_i_in_myself, valid_max_tree_depth, valid_same_organization, valid_can_change_org, \
+    valid_cat_is_leaf
 
 
 class NestedModelChoiceField(forms.ModelChoiceField):
@@ -131,6 +132,7 @@ class ClubAddEditForm(MyModelForm):
             raise Http404('object not exist for user')
         self.fields['category'] = NestedModelChoiceField(
             queryset=ClubCategory.objects.filter(organization__owner=self.request.user).order_by('organization__name', 'name'),
+            validators=[valid_cat_is_leaf],
         )
         if not self.initial and self.request.user.default_country:
             self.fields['country'].initial = self.request.user.default_country.id
@@ -176,6 +178,7 @@ class TeamAddEditForm(MyModelForm):
             raise Http404('object not exist for user')
         self.fields['category'] = NestedModelChoiceField(
             queryset=TeamCategory.objects.filter(organization__owner=self.request.user).order_by('organization__name', 'name'),
+            validators=[valid_cat_is_leaf],
         )
         self.fields['season'].queryset = Season.objects.filter(organization__owner=self.request.user).order_by('name')
         self.fields['club'].queryset = Club.objects.filter(category__organization__owner=self.request.user).order_by('name')

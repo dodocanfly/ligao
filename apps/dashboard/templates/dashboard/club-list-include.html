@@ -1,19 +1,19 @@
 {% load i18n %}
-<ol style="padding: 10px 30px;">
+<ol class="cat-list">
     {% for category in categories %}
         {% if category.has_items %}
             <li>
-                {{ category.name }}
+                <a href="{% url "club-list" %}?c={{ category.id }}">{{ category.name }}</a>
                 {% if category.get_clubs %}
-                    <ul>
+                    <ol class="cat-list">
                         {% for club in category.get_clubs %}
                             <li>
-                                <a href="{% url "club-edit" club.id %}">{% trans "edytuj" %}</a>
-                                <a href="{% url "club-delete" club.id %}">{% trans "usuń" %}</a>
                                 <b>{{ club.name }}</b>
+                                <a href="{% url "club-edit" club.id %}" class="cat-list-btn">{% trans "edytuj" %}</a>
+                                <a href="{% url "club-delete" club.id %}" class="cat-list-btn cl-btn-2">{% trans "usuń" %}</a>
                             </li>
                         {% endfor %}
-                    </ul>
+                    </ol>
                 {% endif %}
                 {% if category.get_children %}
                     {% include 'dashboard/club-list-include.html' with categories=category.get_children %}
@@ -21,9 +21,6 @@
             </li>
         {% endif %}
     {% empty %}
-        <li>
-            {% trans "nie ma jeszcze żadnej kategorii klubów w tej organizacji" %}
-            - <a href="{% url 'club-category-add' %}?o={{ org_id }}">{% trans "dodaj pierwszą" %}</a>
-        </li>
+        <li>{% trans "brak klubów do wyświetlenia" %}</li>
     {% endfor %}
 </ol>

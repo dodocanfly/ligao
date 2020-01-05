@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -8,11 +9,15 @@ from apps.dashboard.models import (
     # GameCategory,
     Season,
     Team,
+    ClubCategory,
+    TeamCategory,
 )
 from apps.restapi.serializers import (
     # GameCategorySerializer,
     SeasonSerializer,
     TeamsSerializer,
+    ClubCategorySerializer,
+    TeamCategorySerializer,
 )
 
 
@@ -24,6 +29,35 @@ from apps.restapi.serializers import (
 #         organization = self.request.query_params.get('organization')
 #         if organization and organization.isnumeric():
 #             return GameCategory.objects.filter(organization__owner=self.request.user, organization_id=int(organization))
+
+
+class ClubCategoryViewSet(ModelViewSet):
+    queryset = ClubCategory.objects.none()
+    serializer_class = ClubCategorySerializer
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            raise Http404()
+        organization = self.request.query_params.get('organization')
+        if organization and organization.isnumeric():
+            qs = ClubCategory.objects.filter(
+                organization__owner=self.request.user,
+                organization_id=int(organization),
+            ).order_by(
+                'parent__name',
+                'name',
+            )
+            return qs
+
+
+class TeamCategoryViewSet(ModelViewSet):
+    queryset = TeamCategory.objects.none()
+    serializer_class = TeamCategorySerializer
+
+    def get_queryset(self):
+        organization = self.request.query_params.get('organization')
+        if organization and organization.isnumeric():
+            return TeamCategory.objects.filter(organization__owner=self.request.user, organization_id=int(organization))
 
 
 class SeasonViewSet(ModelViewSet):

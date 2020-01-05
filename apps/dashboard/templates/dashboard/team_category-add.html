@@ -8,8 +8,8 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">{% trans "Dodaj kategorię zespołów" %}</h4>
-                <form method="post">
-                    {% include "dashboard/team-category-form.html" %}
+                <form method="post" data-formname="team-category-add">
+                    {% include "dashboard/team_category-form.html" %}
                     <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans "dodaj kategorię" %}</button>
                     {% csrf_token %}
                 </form>

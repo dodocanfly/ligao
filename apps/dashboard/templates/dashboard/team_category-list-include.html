@@ -1,0 +1,15 @@
+{% load i18n %}
+<ol class="cat-list">
+    {% for category in categories %}
+        <li>
+            <a href="{% url "team-category-list" %}?c={{ category.id }}">{{ category.name }}</a>
+            <a href="{% url "team-category-edit" category.id %}" class="cat-list-btn">{% trans "edytuj" %}</a>
+            <a href="{% url "team-category-delete" category.id %}" class="cat-list-btn cl-btn-2">{% trans "usuń" %}</a>
+            {% if category.get_children %}
+                {% include 'dashboard/team_category-list-include.html' with categories=category.get_children %}
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>{% trans "brak kategorii zespołów do wyświetlenia" %}</li>
+    {% endfor %}
+</ol>
