@@ -2871,3 +2871,11 @@ a:hover.cl-btn-2 {
     background: #c82333;;
     border-color: #bd2130;
 }
+
+select.form-control option.even {
+    padding-left: 50px;
+    color: #f33;
+}
+select.form-control option.even:before {
+    content: "ddd";
+}

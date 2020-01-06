@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import F
+from django.db.models.functions import Concat
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -103,6 +105,7 @@ class Organization(models.Model):
         return self.name
 
     class Meta:
+        unique_together = ('owner', 'name')
         ordering = ('name',)
         verbose_name = _('organizacja')
         verbose_name_plural = _('organizacje')
@@ -203,6 +206,13 @@ class CategoryNestedModel(models.Model):
             category = category.parent
         return False
 
+    @classmethod
+    def get_nested_cats_ids_list(cls, cat_id):
+        cats_ids = [cat_id]
+        for cat in cls.objects.filter(parent_id=cat_id):
+            cats_ids.extend(cls.get_nested_cats_ids_list(cat.id))
+        return cats_ids
+
     def __str__(self):
         return self.name
 
@@ -263,7 +273,7 @@ class TeamCategory(CategoryNestedModel):
         return category.teams.filter(category=category).exists()
 
     def get_teams(self):
-        return self.teams.filter(category=self)
+        return self.teams.filter(category=self).order_by('season__name', 'name')
 
     class Meta:
         verbose_name = _('kategoria zespołów')
@@ -281,11 +291,24 @@ class Team(models.Model):
     short_name = models.CharField(max_length=25, null=True, blank=True, verbose_name=_('krótka nazwa zespołu'))
     description = models.TextField(null=True, blank=True, verbose_name=_('opis'))
 
+    @classmethod
+    def get_choices(cls, owner, organization_id=None, category_id=None, season_id=None):
+        choices = cls.objects.filter(category__organization__owner=owner)
+        if organization_id is not None:
+            choices = choices.filter(category__organization_id=organization_id)
+        if season_id is not None:
+            choices = choices.filter(season_id=season_id)
+        if category_id is not None:
+            choices = choices.filter(category_id__in=TeamCategory.get_nested_cats_ids_list(category_id))
+
+        return choices.order_by('category__name', 'season__start_year', 'season__name', 'name')
+
     def __str__(self):
-        return self.name
+        # return self.name
+        return '[' + self.category.name + '] ' + '[' + self.season.name + '] ' + self.name
 
     class Meta:
-        unique_together = ('category', 'name')
+        unique_together = ('category', 'season', 'name')
         ordering = ('name',)
 
 

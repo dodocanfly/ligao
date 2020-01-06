@@ -1,13 +1,9 @@
-{% extends 'index.html' %}
-
+{% extends 'dashboard/base.html' %}
 {% load i18n %}
 {% block title %}{% trans "Usuń klub" %}{% endblock %}
 
-{% block content %}
-    <form action="" method="post">
-        {% csrf_token %}
-        <p>{% trans "Na pewno chcesz usunąć wybrany klub?" %}</p>
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-danger">{% trans "Tak, usuń" %}</button>
-    </form>
+{% block form_content %}
+    <p><b>{{ object.name }}</b></p>
+    {% include "dashboard/base-delete-include.html" %}
+    <a href="{% url "club-list" %}" class="btn btn-sm btn-primary">{% trans "Wróć do listy" %}</a>
 {% endblock %}

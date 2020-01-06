@@ -12,6 +12,7 @@ FIELDS_ATTRS = {
         },
         'teams': {
             'class': 'form-control',
+            'size': 10,
         },
         'name': {
             'class': 'form-control',

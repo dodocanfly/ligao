@@ -4,16 +4,23 @@
 {% block title %}{% trans "Lista zespołów" %}{% endblock %}
 
 {% block content %}
-    <ol class="cat-list">
-        {% for organization in object_list %}
-            <li>
-                <a href="{% url "team-list" %}?o={{ organization.id }}">{{ organization.name }}</a>
-                {% include 'dashboard/team-list-include.html' with categories=organization.get_main_team_categories_with_items %}
-            </li>
-        {% empty %}
-            <li>
-                {% trans "nie ma organizacji/kategorii zespołów, do której przypisane są zespoły" %}
-            </li>
-        {% endfor %}
-    </ol>
+    <div class="col-12 mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">{% trans "Lista zespołów" %}</h4>
+                <ol class="cat-list">
+                    {% for organization in object_list %}
+                        <li>
+                            <a href="{% url "team-list" %}?o={{ organization.id }}">{{ organization.name }}</a>
+                            {% include 'dashboard/team-list-include.html' with categories=organization.get_main_team_categories_with_items %}
+                        </li>
+                    {% empty %}
+                        <li>
+                            {% trans "nie ma organizacji/kategorii zespołów, do której przypisane są zespoły" %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
 {% endblock %}

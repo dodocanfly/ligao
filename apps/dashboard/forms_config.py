@@ -65,7 +65,7 @@ FIELDS_ATTRS = {
         'name': {
             'class': 'form-control',
             'minlength': 5,
-            'placeholder': _('np. UKS Umizgi'),
+            'placeholder': _('np. UKS Olsztyn'),
         },
         'founded': {
             'class': 'form-control',
@@ -123,7 +123,7 @@ FIELDS_ATTRS = {
         'name': {
             'class': 'form-control',
             'minlength': 4,
-            'placeholder': _('np. powiatowa liga siatkówki'),
+            'placeholder': _('np. Zakładowa Liga Siatkówki'),
         },
         'organization': {
             'class': 'form-control',

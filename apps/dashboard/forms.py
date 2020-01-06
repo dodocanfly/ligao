@@ -1,11 +1,18 @@
 from django import forms
 from django.http import Http404
 from django.utils.html import mark_safe
+from django.forms import ValidationError
+from django.utils.translation import ugettext_lazy as _
 
 from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team, GameCategory
 from .forms_config import FIELDS_ATTRS
-from .validators import valid_am_i_in_myself, valid_max_tree_depth, valid_same_organization, valid_can_change_org, \
-    valid_cat_is_leaf
+from .validators import (
+    valid_am_i_in_myself,
+    valid_max_tree_depth,
+    valid_same_organization,
+    valid_can_change_org,
+    valid_cat_is_leaf,
+)
 
 
 class NestedModelChoiceField(forms.ModelChoiceField):
@@ -70,7 +77,14 @@ class OrganizationAddEditForm(MyModelForm):
         object_exists = Organization.objects.filter(id=self.initial.get('id'), owner=self.request.user).exists()
         if self.initial and not object_exists:
             raise Http404('object not exist for user')
+        self.fields['owner'].initial = self.request.user
+        self.fields['owner'].widget = forms.HiddenInput()
         self.set_widget_attrs()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.request.user != cleaned_data.get('owner'):
+            raise ValidationError(_('Hacker!'))
 
     def save(self, commit=True):
         organization = super().save(commit=False)
@@ -81,7 +95,7 @@ class OrganizationAddEditForm(MyModelForm):
 
     class Meta:
         model = Organization
-        exclude = ['owner']
+        fields = ('id', 'owner', 'name', 'description', 'location', 'private')
 
 
 class SeasonAddEditForm(MyModelForm):

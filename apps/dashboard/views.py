@@ -1,13 +1,29 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import ProtectedError
-from django.http import HttpResponseForbidden, Http404
+from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View, generic
+from django.utils.translation import ugettext_lazy as _
 
-from apps.dashboard.forms import OrganizationAddEditForm, SeasonAddEditForm, ClubCategoryAddEditForm, ClubAddEditForm, \
-    TeamCategoryAddEditForm, TeamAddEditForm, GameCategoryAddEditForm
-from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team, GameCategory
+from apps.dashboard.forms import (
+    OrganizationAddEditForm,
+    SeasonAddEditForm,
+    ClubCategoryAddEditForm,
+    ClubAddEditForm,
+    TeamCategoryAddEditForm,
+    TeamAddEditForm,
+    GameCategoryAddEditForm,
+)
+from apps.dashboard.models import (
+    Organization,
+    Season,
+    ClubCategory,
+    Club,
+    TeamCategory,
+    Team,
+    GameCategory,
+)
 
 
 class IndexView(View):
@@ -32,6 +48,18 @@ class BaseCreateView(LoginRequiredMixin, generic.CreateView):
         kwargs['request'] = self.request
         return kwargs
 
+    def set_success_urls(self):
+        return ['url-to-list', 'url-to-add-form']  # or string instead list for the same url
+
+    def get_success_url(self):
+        urls = self.set_success_urls()
+        list_url = urls[0] if isinstance(urls, list) else str(urls)
+        form_url = urls[1] if isinstance(urls, list) and len(urls) > 1 else list_url
+        if self.request.POST.get('another-one'):
+            return reverse_lazy(form_url)
+        else:
+            return reverse_lazy(list_url) + '?ok=1'
+
 
 class BaseUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_form_kwargs(self):
@@ -39,16 +67,29 @@ class BaseUpdateView(LoginRequiredMixin, generic.UpdateView):
         kwargs['request'] = self.request
         return kwargs
 
+    def set_success_urls(self):
+        return ['url-to-list', 'url-to-add-form']  # or string instead list for the same url
+
+    def get_success_url(self):
+        urls = self.set_success_urls()
+        list_url = urls[0] if isinstance(urls, list) else str(urls)
+        form_url = urls[1] if isinstance(urls, list) and len(urls) > 1 else list_url
+        if self.request.POST.get('another-one'):
+            return reverse_lazy(form_url)
+        else:
+            return reverse_lazy(list_url) + '?ok=1'
+
 
 class BaseDeleteView(LoginRequiredMixin, generic.DeleteView):
     permission_error = 'Nie masz uprawnień do usunięcia tego obiektu.'
-    protected_error = 'Obiekt powiązany jest z innymi obiektami i nie może być usunięty. <a href="javascript:history.back()">wwwwrrróć!!</a>'
 
     def delete(self, request, *args, **kwargs):
         try:
             return super().delete(request, *args, **kwargs)
         except ProtectedError:
-            return HttpResponseForbidden(self.protected_error)
+            context = self.get_context_data()
+            context.update({'cant_delete': True})
+            return render(request, template_name=self.template_name, context=context)
 
 
 """
@@ -68,14 +109,18 @@ class OrganizationListView(BaseListView):
 class OrganizationAddView(BaseCreateView):
     form_class = OrganizationAddEditForm
     template_name = 'dashboard/organization-add.html'
-    success_url = reverse_lazy('organization-list')
+
+    def set_success_urls(self):
+        return ['organization-list', 'organization-add']
 
 
 class OrganizationEditView(BaseUpdateView):
     model = Organization
     form_class = OrganizationAddEditForm
     template_name = 'dashboard/organization-edit.html'
-    success_url = reverse_lazy('organization-list')
+
+    def set_success_urls(self):
+        return ['organization-list', 'organization-add']
 
 
 class OrganizationDeleteView(BaseDeleteView):
@@ -107,14 +152,18 @@ class SeasonListView(BaseListView):
 class SeasonAddView(BaseCreateView):
     form_class = SeasonAddEditForm
     template_name = 'dashboard/season-add.html'
-    success_url = reverse_lazy('season-list')
+
+    def set_success_urls(self):
+        return ['season-list', 'season-add']
 
 
 class SeasonEditView(BaseUpdateView):
     model = Season
     form_class = SeasonAddEditForm
     template_name = 'dashboard/season-edit.html'
-    success_url = reverse_lazy('season-list')
+
+    def set_success_urls(self):
+        return ['season-list', 'season-add']
 
 
 class SeasonDeleteView(BaseDeleteView):
@@ -157,14 +206,18 @@ class ClubCategoryListView(LoginRequiredMixin, View):
 class ClubCategoryAddView(BaseCreateView):
     form_class = ClubCategoryAddEditForm
     template_name = 'dashboard/club_category-add.html'
-    success_url = reverse_lazy('club-category-list')
+
+    def set_success_urls(self):
+        return ['club-category-list', 'club-category-add']
 
 
 class ClubCategoryEditView(BaseUpdateView):
     model = ClubCategory
     form_class = ClubCategoryAddEditForm
     template_name = 'dashboard/club_category-edit.html'
-    success_url = reverse_lazy('club-category-list')
+
+    def set_success_urls(self):
+        return ['club-category-list', 'club-category-add']
 
 
 class ClubCategoryDeleteView(BaseDeleteView):
@@ -206,17 +259,21 @@ class ClubListView(LoginRequiredMixin, View):
 
 class ClubAddView(BaseCreateView):
     form_class = ClubAddEditForm
-    template_name = 'dashboard/club-add.html'
+    template_name = 'dashboard/club-add-edit.html'
+    extra_context = {'page_title': _('Dodaj nowy klub')}
 
-    def get_success_url(self):
-        return reverse_lazy('club-add') if self.request.POST.get('saveandadd') else reverse_lazy('club-list')
+    def set_success_urls(self):
+        return ['club-list', 'club-add']
 
 
 class ClubEditView(BaseUpdateView):
     model = Club
     form_class = ClubAddEditForm
-    template_name = 'dashboard/club-edit.html'
-    success_url = reverse_lazy('club-list')
+    template_name = 'dashboard/club-add-edit.html'
+    extra_context = {'page_title': _('Edytuj klub')}
+
+    def set_success_urls(self):
+        return ['club-list', 'club-add']
 
 
 class ClubDeleteView(BaseDeleteView):
@@ -248,14 +305,18 @@ class TeamCategoryListView(BaseListView):
 class TeamCategoryAddView(BaseCreateView):
     form_class = TeamCategoryAddEditForm
     template_name = 'dashboard/team_category-add.html'
-    success_url = reverse_lazy('team-category-list')
+
+    def set_success_urls(self):
+        return ['team-category-list', 'team-category-add']
 
 
 class TeamCategoryEditView(BaseUpdateView):
     model = TeamCategory
     form_class = TeamCategoryAddEditForm
     template_name = 'dashboard/team_category-edit.html'
-    success_url = reverse_lazy('team-category-list')
+
+    def set_success_urls(self):
+        return ['team-category-list', 'team-category-add']
 
 
 class TeamCategoryDeleteView(BaseDeleteView):
@@ -277,7 +338,27 @@ class TeamCategoryDeleteView(BaseDeleteView):
 """
 
 
-class TeamListView(BaseListView):
+class TeamListView(LoginRequiredMixin, View):
+    def get(self, request):
+        template_name = 'dashboard/team-list.html'
+        try:
+            if request.GET.get('c'):
+                template_name = 'dashboard/team-list-eq.html'
+                object_list = TeamCategory.get_one(request.user, request.GET.get('c'))
+            elif request.GET.get('o'):
+                object_list = Organization.get_one_with_teams(request.user, request.GET.get('o'))
+            elif request.GET.get('s'):
+                object_list = Organization.get_one_with_teams(request.user, request.GET.get('o'))
+            else:
+                object_list = Organization.get_all_with_teams(request.user)
+        except ValueError:
+            raise Http404()
+        return render(request, template_name, {
+            'object_list': object_list,
+        })
+
+
+class TeamListViewGV(BaseListView):
     template_name = 'dashboard/team-list.html'
 
     def get_queryset(self):
@@ -287,14 +368,18 @@ class TeamListView(BaseListView):
 class TeamAddView(BaseCreateView):
     form_class = TeamAddEditForm
     template_name = 'dashboard/team-add.html'
-    success_url = reverse_lazy('team-list')
+
+    def set_success_urls(self):
+        return ['team-list', 'team-add']
 
 
 class TeamEditView(BaseUpdateView):
     model = Team
     form_class = TeamAddEditForm
     template_name = 'dashboard/team-edit.html'
-    success_url = reverse_lazy('team-list')
+
+    def set_success_urls(self):
+        return ['team-list', 'team-add']
 
 
 class TeamDeleteView(BaseDeleteView):
@@ -326,14 +411,18 @@ class GameCategoryListView(BaseListView):
 class GameCategoryAddView(BaseCreateView):
     form_class = GameCategoryAddEditForm
     template_name = 'dashboard/game_category-add.html'
-    success_url = reverse_lazy('game-category-list')
+
+    def set_success_urls(self):
+        return ['game-category-list', 'game-category-add']
 
 
 class GameCategoryEditView(BaseUpdateView):
     model = GameCategory
     form_class = GameCategoryAddEditForm
     template_name = 'dashboard/game_category-edit.html'
-    success_url = reverse_lazy('game-category-list')
+
+    def set_success_urls(self):
+        return ['game-category-list', 'game-category-add']
 
 
 class GameCategoryDeleteView(BaseDeleteView):

@@ -8,6 +8,7 @@
                     <ol class="cat-list">
                         {% for team in category.get_teams %}
                             <li>
+                                [<a href="{% url "team-list" %}?s={{ team.season.id }}">{{ team.season.name }}</a>]
                                 <b>{{ team.name }}</b>
                                 <a href="{% url "team-edit" team.id %}" class="cat-list-btn">{% trans "edytuj" %}</a>
                                 <a href="{% url "team-delete" team.id %}" class="cat-list-btn cl-btn-2">{% trans "usuń" %}</a>

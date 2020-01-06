@@ -1,3 +1,4 @@
+{% load i18n %}
 {{ form.non_field_errors }}
 <div class="form-group">
     {{ form.organization.label_tag }}
@@ -14,3 +15,5 @@
     {{ form.parent }}
     {{ form.errors.parent }}
 </div>
+<button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans "zapisz zmiany" %}</button>
+<button type="submit" class="btn btn-secondary mt-4 pr-4 pl-4" name="another-one" value="1">{% trans 'zapisz zmiany i dodaj kolejny element' %}</button>

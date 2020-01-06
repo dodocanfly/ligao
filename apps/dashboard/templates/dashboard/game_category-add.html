@@ -10,7 +10,8 @@
                 <h4 class="header-title">{% trans "Dodaj kategorię rozgrywek" %}</h4>
                 <form method="post">
                     {% include "dashboard/game_category-form.html" %}
-                    <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans "dodaj kategorię" %}</button>
+                    <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans "zapisz zmiany" %}</button>
+                    <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4" name="another-one" value="1">{% trans "zapisz zmiany i dodaj kolejną" %}</button>
                     {% csrf_token %}
                 </form>
             </div>

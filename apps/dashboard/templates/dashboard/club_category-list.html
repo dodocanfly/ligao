@@ -4,14 +4,21 @@
 {% block title %}{% trans "Lista kategorii klubów" %}{% endblock %}
 
 {% block content %}
-    <ol class="cat-list">
-        {% for organization in object_list %}
-            <li>
-                <a href="{% url "club-category-list" %}?o={{ organization.id }}">{{ organization.name }}</a>
-                {% include 'dashboard/club_category-list-include.html' with categories=organization.get_main_club_categories %}
-            </li>
-        {% empty %}
-            <li>{% trans "nie ma organizacji, do której przypisane są kategorie klubów" %}</li>
-        {% endfor %}
-    </ol>
+    <div class="col-12 mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">{% trans "Lista kategorii klubów" %}</h4>
+                <ol class="cat-list">
+                    {% for organization in object_list %}
+                        <li>
+                            <a href="{% url "club-category-list" %}?o={{ organization.id }}">{{ organization.name }}</a>
+                            {% include 'dashboard/club_category-list-include.html' with categories=organization.get_main_club_categories %}
+                        </li>
+                    {% empty %}
+                        <li>{% trans "nie ma organizacji, do której przypisane są kategorie klubów" %}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
 {% endblock %}
