@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "Lista kategorii zespołów" %}{% endblock %}
+
+{% block content %}
+    <div class="col-12 mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">{% trans "Lista kategorii zespołów" %}</h4>
+                <ol class="cat-list">
+                    {% for organization in object_list %}
+                        <li>
+                            <a href="{% url "team-category-list" %}?o={{ organization.id }}">{{ organization.name }}</a>
+                            {% include 'dashboard/team_category-list-include.html' with categories=organization.get_main_team_categories %}
+                        </li>
+                    {% empty %}
+                        <li>{% trans "nie ma organizacji, do której przypisane są kategorie zespołów" %}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+{% endblock %}

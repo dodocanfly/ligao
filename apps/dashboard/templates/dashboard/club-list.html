@@ -1,0 +1,16 @@
+{% extends 'dashboard/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Lista klubów" %}{% endblock %}
+
+{% block form_content %}
+    <ol class="cat-list">
+        {% for organization in object_list %}
+            <li>
+                <a href="{% url "club-list" %}?o={{ organization.id }}">{{ organization.name }}</a>
+                {% include 'dashboard/club-list-include.html' with categories=organization.get_main_club_categories_with_items %}
+            </li>
+        {% empty %}
+            <li>{% trans "nie ma organizacji/kategorii klubów, do której przypisane są kluby" %}</li>
+        {% endfor %}
+    </ol>
+{% endblock %}

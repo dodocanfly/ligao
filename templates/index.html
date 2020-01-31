@@ -1,0 +1,196 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load templactions %}
+
+{% block page-container %}
+    <!-- page container area start -->
+    <div class="page-container">
+        <!-- sidebar menu area start -->
+        <div class="sidebar-menu">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <h2><a href="/">ligao.pl</a></h2>
+                </div>
+            </div>
+            <div class="main-menu">
+                <div class="menu-inner">
+                    <nav>
+                        <ul class="metismenu" id="menu">
+                            <li{% activeclass "organizacje" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Organizacje</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "organizacje/lista" %}><a href="{% url 'organization-list' %}">Lista organizacji</a></li>
+                                    <li{% activeclass "organizacje/dodaj" %}><a href="{% url 'organization-add' %}">Dodaj organizację</a></li>
+                                </ul>
+                            </li>
+                            <li{% activeclass "klub" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Kluby</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "kluby/lista" %}><a href="{% url 'club-list' %}">Lista klubów</a></li>
+                                    <li{% activeclass "kluby/dodaj" %}><a href="{% url 'club-add' %}">Dodaj klub</a></li>
+                                    <li{% activeclass "kategorie-klubow/lista" %}><a href="{% url 'club-category-list' %}">Lista kategorii</a></li>
+                                    <li{% activeclass "kategorie-klubow/dodaj" %}><a href="{% url 'club-category-add' %}">Dodaj kategorię</a></li>
+                                </ul>
+                            </li>
+                            <li{% activeclass "sezony" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Sezony</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "sezony/lista" %}><a href="{% url 'season-list' %}">Lista sezonów</a></li>
+                                    <li{% activeclass "sezony/dodaj" %}><a href="{% url 'season-add' %}">Dodaj sezon</a></li>
+                                </ul>
+                            </li>
+                            <li{% activeclass "zespol" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Zespoły</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "zespoly/lista" %}><a href="{% url 'team-list' %}">Lista zespołów</a></li>
+                                    <li{% activeclass "zespoly/dodaj" %}><a href="{% url 'team-add' %}">Dodaj zespół</a></li>
+                                    <li{% activeclass "kategorie-zespolow/lista" %}><a href="{% url 'team-category-list' %}">Lista kategorii</a></li>
+                                    <li{% activeclass "kategorie-zespolow/dodaj" %}><a href="{% url 'team-category-add' %}">Dodaj kategorię</a></li>
+                                </ul>
+                            </li>
+                            <li{% activeclass "rozgryw" %}>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-clipboard"></i><span>Rozgrywki</span></a>
+                                <ul class="collapse">
+                                    <li{% activeclass "rozgrywki/lista" %}><a href="{% url 'game-list' %}">Lista rozgrywek</a></li>
+                                    <li{% activeclass "rozgrywki/dodaj" %}><a href="{% url 'game-add' %}">Dodaj rozgrywkę</a></li>
+                                    <li{% activeclass "kategorie-rozgrywek/lista" %}><a href="{% url 'game-category-list' %}">Lista kategorii</a></li>
+                                    <li{% activeclass "kategorie-rozgrywek/dodaj" %}><a href="{% url 'game-category-add' %}">Dodaj kategorię</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#"><i class="ti-map-alt"></i><span>Not expanding</span></a></li>
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-align-left"></i><span>Dyscypliny</span></a>
+                                <ul class="collapse">
+                                    <li><a href="#" aria-expanded="true">Siatkówka</a>
+                                        <ul class="collapse">
+                                            <li><a href="#">Lista rozgrywek</a></li>
+                                            <li><a href="#">Dodaj rozgrywkę</a></li>
+                                            <li><a href="#">Systemy gry</a></li>
+                                            <li><a href="#">Dodaj system</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- sidebar menu area end -->
+        <!-- main content area start -->
+        <div class="main-content">
+            <!-- header area start -->
+            <div class="header-area">
+                <div class="row align-items-center">
+                    <!-- nav and search button -->
+                    <div class="col-md-6 col-sm-8 clearfix">
+                        <div class="nav-btn pull-left">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="search-box pull-left">
+                            <form action="#">
+                                <input type="text" name="search" placeholder="Search..." required>
+                                <i class="ti-search"></i>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- profile info & task notification -->
+                    <div class="col-md-6 col-sm-4 clearfix">
+                        <ul class="notification-area pull-right">
+                            <li id="full-view"><i class="ti-fullscreen"></i></li>
+                            <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
+                            <li class="dropdown">
+                                <i class="ti-bell dropdown-toggle" data-toggle="dropdown">
+                                    <span>1</span>
+                                </i>
+                                <div class="dropdown-menu bell-notify-box notify-box">
+                                    <span class="notify-title">You have 1 new notification <a href="#">view all</a></span>
+                                    <div class="nofity-list">
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
+                                            <div class="notify-text">
+                                                <p>You have Changed Your Password</p>
+                                                <span>Just Now</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="dropdown">
+                                <i class="fa fa-envelope-o dropdown-toggle" data-toggle="dropdown"><span>1</span></i>
+                                <div class="dropdown-menu notify-box nt-enveloper-box">
+                                    <span class="notify-title">You have 1 new notifications <a href="#">view all</a></span>
+                                    <div class="nofity-list">
+                                        <a href="#" class="notify-item">
+                                            <div class="notify-thumb">
+                                                <img src="{% static "images/author/author-img1.jpg" %}" alt="image">
+                                            </div>
+                                            <div class="notify-text">
+                                                <p>Aglae Mayer</p>
+                                                <span class="msg">Hey I am waiting for you...</span>
+                                                <span>3:15 PM</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="settings-btn">
+                                <i class="ti-settings"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- header area end -->
+            <!-- page title area start -->
+            <div class="page-title-area">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <div class="breadcrumbs-area clearfix">
+                            <h4 class="page-title pull-left">Panel</h4>
+                            <ul class="breadcrumbs pull-left">
+                                <li><a href="/">Home</a></li>
+                                <li><span>Dashboard</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 clearfix">
+                        <div class="user-profile pull-right">
+                            {% if user.is_authenticated %}
+                                <img class="avatar user-thumb" src="{% static "images/author/avatar.png" %}" alt="avatar">
+                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown">{{ user.email }} <i class="fa fa-angle-down"></i></h4>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'profil' %}">Ustawienia</a>
+                                    <a class="dropdown-item" href="{% url 'logout' %}">Wyloguj</a>
+                                </div>
+                            {% else %}
+                                <img class="avatar user-thumb" src="{% static "images/author/avatar.png" %}" alt="avatar">
+                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Niezalogowany? <i class="fa fa-angle-down"></i></h4>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'login' %}">Zaloguj się</a>
+                                    <a class="dropdown-item" href="/user/new">Załóż konto</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- page title area end -->
+            <div class="main-content-inner">
+                <!-- MAIN CONTENT GOES HERE -->
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        <!-- main content area end -->
+        <!-- footer area start-->
+        <footer>
+            <div class="footer-area">
+                <p>© 2019 ligao.pl</p>
+            </div>
+        </footer>
+        <!-- footer area end-->
+    </div>
+    <!-- page container area end -->
+{% endblock %}

@@ -1,0 +1,257 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-12-21 13:45+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/dashboard/forms.py:10 apps/dashboard/forms.py:39
+#: apps/dashboard/forms.py:61
+msgid "Obiekt, który chcesz edytować, nie istnieje na twoim koncie."
+msgstr ""
+
+#: apps/dashboard/forms.py:50
+msgid "np. sezon 2019/2020"
+msgstr ""
+
+#: apps/dashboard/forms.py:51
+msgid "np. 2019"
+msgstr ""
+
+#: apps/dashboard/forms.py:72
+msgid "np. kluby młodzieżowe"
+msgstr ""
+
+#: apps/dashboard/models.py:8
+msgid "właściciel"
+msgstr "owner"
+
+#: apps/dashboard/models.py:9
+msgid "nazwa organizacji"
+msgstr "organisation name"
+
+#: apps/dashboard/models.py:10
+msgid "opis organizacji"
+msgstr "organisation description"
+
+#: apps/dashboard/models.py:11
+msgid "lokalizacja / miasto"
+msgstr "location / city"
+
+#: apps/dashboard/models.py:12
+msgid "organizacja prywatna"
+msgstr "private organisation"
+
+#: apps/dashboard/models.py:16 apps/dashboard/models.py:36
+#: apps/dashboard/models.py:51
+msgid "organizacja"
+msgstr "organisation"
+
+#: apps/dashboard/models.py:17
+msgid "organizacje"
+msgstr "organisations"
+
+#: apps/dashboard/models.py:37
+msgid "nazwa sezonu"
+msgstr "season name"
+
+#: apps/dashboard/models.py:38
+msgid "rok rozpoczęcia"
+msgstr ""
+
+#: apps/dashboard/models.py:39
+msgid "rozgrywki w dwóch latach"
+msgstr ""
+
+#: apps/dashboard/models.py:43
+msgid "sezon rozgrywek"
+msgstr ""
+
+#: apps/dashboard/models.py:44
+msgid "sezony rozgrywek"
+msgstr ""
+
+#: apps/dashboard/models.py:52
+msgid "nazwa kategorii"
+msgstr "organisation name"
+
+#: apps/dashboard/models.py:53
+msgid "kategoria nadrzędna"
+msgstr ""
+
+#: apps/dashboard/models.py:57
+msgid "Kategoria nie może być swoją kategorią nadrzędną."
+msgstr ""
+
+#: apps/dashboard/models.py:63
+msgid "kategoria klubów"
+msgstr ""
+
+#: apps/dashboard/models.py:64
+msgid "kategorie klubów"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-add.html:4
+msgid "Dodaj nową kategorię klubów"
+msgstr "Add new organisation"
+
+#: apps/dashboard/templates/dashboard/club-category-add.html:10
+msgid "Dodaj kategorię klubów"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-add.html:13
+msgid "dodaj kategorię"
+msgstr "add organisation"
+
+#: apps/dashboard/templates/dashboard/club-category-delete.html:4
+msgid "Usuń kategorię klubów"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-delete.html:9
+msgid "Na pewno chcesz usunąć wybraną kategorię klubów?"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-delete.html:11
+#: apps/dashboard/templates/dashboard/organization-delete.html:11
+#: apps/dashboard/templates/dashboard/season-delete.html:11
+msgid "Tak, usuń"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-edit.html:4
+#: apps/dashboard/templates/dashboard/club-category-edit.html:10
+msgid "Edytuj kategorię klubów"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-edit.html:13
+#: apps/dashboard/templates/dashboard/organization-edit.html:13
+#: apps/dashboard/templates/dashboard/season-edit.html:13
+msgid "zapisz zmiany"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-list.html:4
+msgid "Lista kategorii klubów"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-list.html:10
+#: apps/dashboard/templates/dashboard/organization-list.html:10
+#: apps/dashboard/templates/dashboard/season-list.html:10
+msgid "edytuj"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-list.html:11
+#: apps/dashboard/templates/dashboard/organization-list.html:11
+#: apps/dashboard/templates/dashboard/season-list.html:11
+msgid "usuń"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-list.html:16
+msgid "nie ma jeszcze żadnej kategorii klubów"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/club-category-list.html:17
+#: apps/dashboard/templates/dashboard/organization-list.html:17
+msgid "dodaj pierwszą"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/organization-add.html:4
+msgid "Dodaj nową organizację"
+msgstr "Add new organization"
+
+#: apps/dashboard/templates/dashboard/organization-add.html:10
+msgid "Dodaj organizację"
+msgstr "Add organization"
+
+#: apps/dashboard/templates/dashboard/organization-add.html:13
+msgid "dodaj organizację"
+msgstr "add organization"
+
+#: apps/dashboard/templates/dashboard/organization-delete.html:4
+msgid "Usuń organizację"
+msgstr "Delete organization"
+
+#: apps/dashboard/templates/dashboard/organization-delete.html:9
+msgid "Na pewno chcesz usunąć wybraną organizację?"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/organization-edit.html:4
+#: apps/dashboard/templates/dashboard/organization-edit.html:10
+msgid "Edytuj organizację"
+msgstr "Edit organization"
+
+#: apps/dashboard/templates/dashboard/organization-list.html:4
+msgid "Lista organizacji"
+msgstr "Organization's list"
+
+#: apps/dashboard/templates/dashboard/organization-list.html:16
+msgid "nie ma jeszcze żadnej organizacji"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/season-add.html:4
+msgid "Dodaj nowy sezon"
+msgstr "Add new organization"
+
+#: apps/dashboard/templates/dashboard/season-add.html:10
+msgid "Dodaj sezon"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/season-add.html:13
+msgid "dodaj sezon"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/season-delete.html:4
+msgid "Usuń sezon"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/season-delete.html:9
+msgid "Na pewno chcesz usunąć wybrany sezon?"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/season-edit.html:4
+#: apps/dashboard/templates/dashboard/season-edit.html:10
+msgid "Edytuj sezon"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/season-list.html:4
+msgid "Lista sezonów"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/season-list.html:16
+msgid "nie ma jeszcze żadnego sezonu"
+msgstr ""
+
+#: apps/dashboard/templates/dashboard/season-list.html:17
+msgid "dodaj pierwszy"
+msgstr ""
+
+#: apps/users/models.py:10
+msgid "domyślny kraj"
+msgstr "default country"
+
+#: apps/users/models.py:13
+msgid "użytkownik"
+msgstr "user"
+
+#: apps/users/models.py:14
+msgid "użytkownicy"
+msgstr "users"
+
+#: ligao/settings.py:112
+msgid "English"
+msgstr ""
+
+#: ligao/settings.py:113
+msgid "Polish"
+msgstr ""

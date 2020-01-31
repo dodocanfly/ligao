@@ -1,0 +1,10 @@
+{% load i18n %}
+<ul class="errorlist nonfield">
+    {% if cant_delete %}
+        <li>{% trans "Obiekt powiązany jest z innymi obiektami i nie może być usunięty." %}</li>
+    {% else %}
+        <li>{% trans "Na pewno chcesz usunąć wybrany obiekt?" %}</li>
+    {% endif %}
+</ul>
+<br>
+{% if not cant_delete %}<button type="submit" class="btn btn-sm btn-danger">{% trans "Tak, usuń" %}</button>{% endif %}

@@ -1,0 +1,28 @@
+{% extends 'index.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "Lista organizacji" %}{% endblock %}
+
+{% block content %}
+    <div class="col-12 mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">{% trans "Lista organizacji" %}</h4>
+                <ol class="cat-list">
+                    {% for object in object_list %}
+                        <li>
+                            {{ object.name }}
+                            <a href="{% url 'organization-edit' object.id %}" class="cat-list-btn">{% trans "edytuj" %}</a>
+                            <a href="{% url 'organization-delete' object.id %}" class="cat-list-btn cl-btn-2">{% trans "usuń" %}</a>
+                        </li>
+                    {% empty %}
+                        <li>
+                            {% trans "nie ma jeszcze żadnej organizacji" %}
+                            - <a href="{% url 'organization-add' %}">{% trans "dodaj pierwszą" %}</a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+{% endblock %}

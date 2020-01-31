@@ -1,0 +1,27 @@
+{% load i18n %}
+<ol class="cat-list">
+    {% for category in categories %}
+        {% if category.has_items %}
+            <li>
+                <a href="{% url "team-list" %}?c={{ category.id }}">{{ category.name }}</a>
+                {% if category.get_teams %}
+                    <ol class="cat-list">
+                        {% for team in category.get_teams %}
+                            <li>
+                                [<a href="{% url "team-list" %}?s={{ team.season.id }}">{{ team.season.name }}</a>]
+                                <b>{{ team.name }}</b>
+                                <a href="{% url "team-edit" team.id %}" class="cat-list-btn">{% trans "edytuj" %}</a>
+                                <a href="{% url "team-delete" team.id %}" class="cat-list-btn cl-btn-2">{% trans "usuń" %}</a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+                {% if category.get_children %}
+                    {% include 'dashboard/team-list-include.html' with categories=category.get_children %}
+                {% endif %}
+            </li>
+        {% endif %}
+    {% empty %}
+        <li>{% trans "brak zespołów do wyświetlenia" %}</li>
+    {% endfor %}
+</ol>

@@ -1,0 +1,8 @@
+{% extends 'index.html' %}
+
+{% load i18n %}
+{% block title %}{% trans "Lista kategorii klubów" %}{% endblock %}
+
+{% block content %}
+    {% include 'dashboard/club_category-list-include.html' with categories=object_list %}
+{% endblock %}

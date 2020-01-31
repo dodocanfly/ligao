@@ -1,0 +1,26 @@
+{% load i18n %}
+<ol class="cat-list">
+    {% for category in categories %}
+        {% if category.has_items %}
+            <li>
+                <a href="{% url "game-list" %}?c={{ category.id }}">{{ category.name }}</a>
+                {% if category.get_games %}
+                    <ol class="cat-list">
+                        {% for game in category.get_games %}
+                            <li>
+                                <b>{{ game.name }}</b>
+                                <a href="{% url "game-edit" game.id %}" class="cat-list-btn">{% trans "edytuj" %}</a>
+                                <a href="{% url "game-delete" game.id %}" class="cat-list-btn cl-btn-2">{% trans "usuń" %}</a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+                {% if category.get_children %}
+                    {% include 'volleyball/game-list-include.html' with categories=category.get_children %}
+                {% endif %}
+            </li>
+        {% endif %}
+    {% empty %}
+        <li>{% trans "brak rozgrywek do wyświetlenia" %}</li>
+    {% endfor %}
+</ol>

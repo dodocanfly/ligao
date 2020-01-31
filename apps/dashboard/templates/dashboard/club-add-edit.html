@@ -1,0 +1,39 @@
+{% extends 'dashboard/base.html' %}
+{% load i18n %}
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block form_content %}
+    {{ form.non_field_errors }}
+    <div class="form-group">
+        {{ form.category.label_tag }}
+        {{ form.category }}
+        {{ form.errors.category }}
+    </div>
+    <div class="form-group">
+        {{ form.country.label_tag }}
+        {{ form.country }}
+        {{ form.errors.country }}
+    </div>
+    <div class="form-group">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {{ form.errors.name }}
+    </div>
+    <div class="form-group">
+        {{ form.founded.label_tag }}
+        {{ form.founded }}
+        {{ form.errors.founded }}
+    </div>
+    <div class="form-group">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        {{ form.errors.description }}
+    </div>
+    <div class="form-check">
+        {{ form.national }}
+        <label class="form-check-label" for="id_{{ form.national.name }}">{{ form.national.label }}</label>
+        {{ form.errors.national }}
+    </div>
+    <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans 'zapisz zmiany' %}</button>
+    <button type="submit" class="btn btn-secondary mt-4 pr-4 pl-4" name="another-one" value="1">{% trans 'zapisz zmiany i dodaj kolejny element' %}</button>
+{% endblock %}

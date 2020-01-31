@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+
+{% block title %}Edytuj ustawienia konta{% endblock %}
+
+{% block content %}
+    <!-- profil area start -->
+                <form method="post">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                    <button type="submit">zapisz zmiany</button>
+                </form>
+    <!-- profil area end -->
+{% endblock %}

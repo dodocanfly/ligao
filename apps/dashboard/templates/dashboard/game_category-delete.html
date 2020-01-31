@@ -1,0 +1,9 @@
+{% extends 'dashboard/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Usuń kategorię rozgrywek" %}{% endblock %}
+
+{% block form_content %}
+    <p><b>{{ object.name }}</b></p>
+    {% include "dashboard/base-delete-include.html" %}
+    <a href="{% url "game-category-list" %}" class="btn btn-sm btn-primary">{% trans "Wróć do listy" %}</a>
+{% endblock %}
