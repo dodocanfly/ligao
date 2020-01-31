@@ -23,7 +23,6 @@ urlpatterns = [
     path('user/', include('apps.users.urls')),
     path('admin/', admin.site.urls),
     path('panel/', include('apps.dashboard.urls')),
-    path('panel/siatkowka/', include('apps.volleyball.urls')),
     path('api/', include('apps.restapi.urls')),
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
 ]

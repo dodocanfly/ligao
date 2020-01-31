@@ -1,9 +1,9 @@
 from django import forms
 from django.http import Http404
-from django.utils.html import mark_safe
 from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from utils.forms import MyModelForm, NestedModelChoiceField
 from apps.dashboard.models import Organization, Season, ClubCategory, Club, TeamCategory, Team, GameCategory
 from .forms_config import FIELDS_ATTRS
 from .validators import (
@@ -15,61 +15,6 @@ from .validators import (
 )
 
 
-class NestedModelChoiceField(forms.ModelChoiceField):
-    indent_spaces_number = 8
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._populate_choices()
-
-    def _prepare_categories(self):
-        organizations = {}
-        for category in self.queryset:
-            if category.organization_id not in organizations:
-                organizations[category.organization_id] = {
-                    'name': category.organization.name,
-                    'cats': {},
-                }
-            parent_id = 0 if category.parent is None else category.parent_id
-            if parent_id not in organizations[category.organization_id]['cats']:
-                organizations[category.organization_id]['cats'][parent_id] = {}
-            organizations[category.organization_id]['cats'][parent_id][category.id] = category
-        return organizations.items()
-
-    def _populate_choices(self):
-
-        def prepare_choices(cats, index, level):
-            choices = []
-            for cat_id, cat_obj in cats[index].items():
-                indend = '&nbsp;' * (self.indent_spaces_number * level)
-                choices.append([cat_id, mark_safe(indend + cat_obj.name)])
-                if cat_id in cats:
-                    choices.extend(prepare_choices(cats, cat_id, level + 1))
-            return choices
-
-        self.choices = [['', '----------']]
-        for idx, organization in self._prepare_categories():
-            self.choices.append([
-                organization['name'],
-                prepare_choices(organization['cats'], 0, 0),
-            ])
-
-
-class MyModelForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
-        super().__init__(*args, **kwargs)
-
-    def set_widget_attrs(self, source=None):
-        if source is None:
-            source = FIELDS_ATTRS
-        model_key = self.__class__.__name__
-        if model_key in source:
-            for field, attrs in source[model_key].items():
-                if field in self.fields:
-                    self.fields[field].widget.attrs = attrs
-
-
 class OrganizationAddEditForm(MyModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -79,7 +24,7 @@ class OrganizationAddEditForm(MyModelForm):
             raise Http404('object not exist for user')
         self.fields['owner'].initial = self.request.user
         self.fields['owner'].widget = forms.HiddenInput()
-        self.set_widget_attrs()
+        self.set_widget_attrs(FIELDS_ATTRS)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -106,7 +51,7 @@ class SeasonAddEditForm(MyModelForm):
         if self.initial and not object_exists:
             raise Http404('object not exist for user')
         self.fields['organization'].queryset = Organization.objects.filter(owner=self.request.user)
-        self.set_widget_attrs()
+        self.set_widget_attrs(FIELDS_ATTRS)
 
     class Meta:
         model = Season
@@ -132,7 +77,7 @@ class ClubCategoryAddEditForm(MyModelForm):
             ],
             required=False,
         )
-        self.set_widget_attrs()
+        self.set_widget_attrs(FIELDS_ATTRS)
 
     class Meta:
         model = ClubCategory
@@ -152,7 +97,7 @@ class ClubAddEditForm(MyModelForm):
         )
         if not self.initial and self.request.user.default_country:
             self.fields['country'].initial = self.request.user.default_country.id
-        self.set_widget_attrs()
+        self.set_widget_attrs(FIELDS_ATTRS)
 
     class Meta:
         model = Club
@@ -178,7 +123,7 @@ class TeamCategoryAddEditForm(MyModelForm):
             ],
             required=False,
         )
-        self.set_widget_attrs()
+        self.set_widget_attrs(FIELDS_ATTRS)
 
     class Meta:
         model = TeamCategory
@@ -198,7 +143,7 @@ class TeamAddEditForm(MyModelForm):
         )
         self.fields['season'].queryset = Season.objects.filter(organization__owner=self.request.user).order_by('name')
         self.fields['club'].queryset = Club.objects.filter(category__organization__owner=self.request.user).order_by('name')
-        self.set_widget_attrs()
+        self.set_widget_attrs(FIELDS_ATTRS)
 
     class Meta:
         model = Team
@@ -224,8 +169,19 @@ class GameCategoryAddEditForm(MyModelForm):
             ],
             required=False,
         )
-        self.set_widget_attrs()
+        self.set_widget_attrs(FIELDS_ATTRS)
 
     class Meta:
         model = GameCategory
         fields = ('id', 'organization', 'name', 'parent')
+
+
+class GameAddForm(forms.Form):
+    organization = forms.ModelChoiceField(Organization.objects.none())
+    category = forms.ModelChoiceField(GameCategory.objects.none())
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+        self.fields['organization'].queryset = Organization.all_for_user(self.request.user)
+        self.fields['category'].queryset = GameCategory.objects.filter(organization__owner=self.request.user)

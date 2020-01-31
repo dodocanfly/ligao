@@ -16,60 +16,60 @@ class Organization(models.Model):
     private = models.BooleanField(verbose_name=_('organizacja prywatna'), default=False)
 
     @classmethod
-    def get_all(cls, owner):
+    def all_for_user(cls, owner):
         return cls.objects.filter(owner=owner)
 
     @classmethod
-    def get_one(cls, owner, organization_id):
+    def one_for_user(cls, owner, organization_id):
         return cls.objects.filter(owner=owner, id__exact=organization_id)
 
     @classmethod
     def get_all_with_club_categories(cls, owner):
-        return cls.get_all(owner).annotate(counter=models.Count('club_categories')).filter(counter__gt=0)
+        return cls.all_for_user(owner).annotate(counter=models.Count('club_categories')).filter(counter__gt=0)
 
     @classmethod
     def get_one_with_club_categories(cls, owner, organization_id):
-        return cls.get_one(owner, organization_id).annotate(counter=models.Count('club_categories')).filter(counter__gt=0)
+        return cls.one_for_user(owner, organization_id).annotate(counter=models.Count('club_categories')).filter(counter__gt=0)
 
     @classmethod
     def get_all_with_team_categories(cls, owner):
-        return cls.get_all(owner).annotate(counter=models.Count('team_categories')).filter(counter__gt=0)
+        return cls.all_for_user(owner).annotate(counter=models.Count('team_categories')).filter(counter__gt=0)
 
     @classmethod
     def get_one_with_team_categories(cls, owner, organization_id):
-        return cls.get_one(owner, organization_id).annotate(counter=models.Count('team_categories')).filter(counter__gt=0)
+        return cls.one_for_user(owner, organization_id).annotate(counter=models.Count('team_categories')).filter(counter__gt=0)
 
     @classmethod
     def get_all_with_game_categories(cls, owner):
-        return cls.get_all(owner).annotate(counter=models.Count('game_categories')).filter(counter__gt=0)
+        return cls.all_for_user(owner).annotate(counter=models.Count('game_categories')).filter(counter__gt=0)
 
     @classmethod
     def get_one_with_game_categories(cls, owner, organization_id):
-        return cls.get_one(owner, organization_id).annotate(counter=models.Count('game_categories')).filter(counter__gt=0)
+        return cls.one_for_user(owner, organization_id).annotate(counter=models.Count('game_categories')).filter(counter__gt=0)
 
     @classmethod
     def get_all_with_clubs(cls, owner):
-        return cls.get_all(owner).annotate(counter=models.Count('club_categories__clubs')).filter(counter__gt=0)
+        return cls.all_for_user(owner).annotate(counter=models.Count('club_categories__clubs')).filter(counter__gt=0)
 
     @classmethod
     def get_one_with_clubs(cls, owner, organization_id):
-        return cls.get_one(owner, organization_id).annotate(counter=models.Count('club_categories__clubs')).filter(counter__gt=0)
+        return cls.one_for_user(owner, organization_id).annotate(counter=models.Count('club_categories__clubs')).filter(counter__gt=0)
 
     @classmethod
     def get_all_with_teams(cls, owner):
-        return cls.get_all(owner).annotate(counter=models.Count('team_categories__teams')).filter(counter__gt=0)
+        return cls.all_for_user(owner).annotate(counter=models.Count('team_categories__teams')).filter(counter__gt=0)
 
     @classmethod
     def get_one_with_teams(cls, owner, organization_id):
-        return cls.get_one(owner, organization_id).annotate(counter=models.Count('team_categories__teams')).filter(counter__gt=0)
+        return cls.one_for_user(owner, organization_id).annotate(counter=models.Count('team_categories__teams')).filter(counter__gt=0)
 
     @classmethod
     def get_all_with_games(cls, owner):
-        return cls.get_all(owner).annotate(counter=models.Count('game_categories__games')).filter(counter__gt=0)
+        return cls.all_for_user(owner).annotate(counter=models.Count('game_categories__games')).filter(counter__gt=0)
 
     @classmethod
     def get_one_with_games(cls, owner, organization_id):
-        return cls.get_one(owner, organization_id).annotate(counter=models.Count('game_categories__games')).filter(counter__gt=0)
+        return cls.one_for_user(owner, organization_id).annotate(counter=models.Count('game_categories__games')).filter(counter__gt=0)
 
     def get_main_club_categories(self):
         return self.club_categories.filter(parent=None).order_by('name')
@@ -131,6 +131,14 @@ class Season(models.Model):
     name = models.CharField(verbose_name=_('nazwa sezonu'), max_length=50)
     start_year = models.IntegerField(verbose_name=_('rok rozpoczęcia'))
     double_year = models.BooleanField(verbose_name=_('rozgrywki w dwóch latach'), default=True)
+
+    @classmethod
+    def all_for_user(cls, user):
+        return cls.objects.filter(organization__owner=user).order_by('name')
+
+    @classmethod
+    def all_for_game_category(cls, category_id):
+        return cls.objects.filter(games__category_id=category_id).order_by('name')
 
     def __str__(self):
         return self.name
@@ -328,3 +336,72 @@ class GameCategory(CategoryNestedModel):
     class Meta:
         verbose_name = _('kategoria rozgrywek')
         verbose_name_plural = _('kategorie rozgrywek')
+
+
+class ScoringSystem(models.Model):
+    GAME_UP_TO_SETS_CHOICES = (
+        (2, 2),
+        (3, 3),
+    )
+    organization = models.ForeignKey(Organization, on_delete=models.PROTECT, related_name='volleyball_scoring_systems')
+    game_up_to = models.SmallIntegerField(default=3, choices=GAME_UP_TO_SETS_CHOICES)
+    name = models.CharField(max_length=50)
+    result_3_0 = models.SmallIntegerField(default=0, blank=True)
+    result_3_1 = models.SmallIntegerField(default=0, blank=True)
+    result_3_2 = models.SmallIntegerField(default=0, blank=True)
+    result_2_3 = models.SmallIntegerField(default=0, blank=True)
+    result_1_3 = models.SmallIntegerField(default=0, blank=True)
+    result_0_3 = models.SmallIntegerField(default=0, blank=True)
+    result_2_0 = models.SmallIntegerField(default=0, blank=True)
+    result_2_1 = models.SmallIntegerField(default=0, blank=True)
+    result_1_2 = models.SmallIntegerField(default=0, blank=True)
+    result_0_2 = models.SmallIntegerField(default=0, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Game(models.Model):
+    UP_TO_SETS_CHOICES = (
+        (2, 2),
+        (3, 3),
+    )
+
+    category = models.ForeignKey(GameCategory, related_name='games', on_delete=models.PROTECT)
+    season = models.ForeignKey(Season, related_name='games', on_delete=models.PROTECT)
+    name = models.CharField(max_length=50)
+    teams = models.ManyToManyField(Team, related_name='games')
+    up_to_sets = models.SmallIntegerField(choices=UP_TO_SETS_CHOICES, verbose_name='do ilu setów')
+    scoring_system = models.ForeignKey(ScoringSystem, null=True, default=None, on_delete=models.PROTECT, related_name='games')
+
+    def __str__(self):
+        return self.name
+
+
+class Match(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.PROTECT)
+    round = models.SmallIntegerField()
+    host_team = models.ForeignKey(Team, related_name='host_team', on_delete=models.PROTECT)
+    guest_team = models.ForeignKey(Team, related_name='guest_team', on_delete=models.PROTECT)
+    host_sets = models.SmallIntegerField()
+    guest_sets = models.SmallIntegerField()
+    set_1_host = models.SmallIntegerField()
+    set_1_guest = models.SmallIntegerField()
+    set_2_host = models.SmallIntegerField()
+    set_2_guest = models.SmallIntegerField()
+    set_3_host = models.SmallIntegerField(null=True, blank=True)
+    set_3_guest = models.SmallIntegerField(null=True, blank=True)
+    set_4_host = models.SmallIntegerField(null=True, blank=True)
+    set_4_guest = models.SmallIntegerField(null=True, blank=True)
+    set_5_host = models.SmallIntegerField(null=True, blank=True)
+    set_5_guest = models.SmallIntegerField(null=True, blank=True)
+    datetime = models.DateTimeField()
+    order = models.SmallIntegerField()
+    finished = models.BooleanField(default=False)
+    walkover = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['round', 'order']
+
+    def __str__(self):
+        return self.host_team.name + ' - ' + self.guest_team.name

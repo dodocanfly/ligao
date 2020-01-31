@@ -14,7 +14,7 @@ from apps.dashboard.forms import (
     TeamCategoryAddEditForm,
     TeamAddEditForm,
     GameCategoryAddEditForm,
-)
+    GameAddForm)
 from apps.dashboard.models import (
     Organization,
     Season,
@@ -435,3 +435,23 @@ class GameCategoryDeleteView(BaseDeleteView):
         if not GameCategory.objects.filter(id=obj.id, organization__owner=self.request.user).exists():
             raise PermissionError(self.permission_error)
         return obj
+
+
+"""
+##############################################################################
+                            GAME CATEGORIES VIEWS
+##############################################################################
+"""
+
+
+class GameListView(BaseListView):
+    template_name = 'dashboard/game-list.html'
+
+    def get_queryset(self):
+        return Organization.get_all_with_game_categories(self.request.user)
+
+
+class GameAddView(View):
+    def get(self, request):
+        form = GameAddForm(request=request)
+        return render(request, 'dashboard/game-add.html', {'form': form})

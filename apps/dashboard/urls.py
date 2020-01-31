@@ -36,4 +36,10 @@ urlpatterns = [
     path('kategorie-rozgrywek/dodaj', views.GameCategoryAddView.as_view(), name='game-category-add'),
     path('kategorie-rozgrywek/edytuj/<int:pk>', views.GameCategoryEditView.as_view(), name='game-category-edit'),
     path('kategorie-rozgrywek/usun/<int:pk>', views.GameCategoryDeleteView.as_view(), name='game-category-delete'),
+
+    path('rozgrywki/lista', views.GameListView.as_view(), name='game-list'),
+    path('rozgrywki/dodaj', views.GameAddView.as_view(), name='game-add'),
+    # path('rozgrywki/edytuj/<int:pk>', views.GameEditView.as_view(), name='game-edit'),
+    # path('rozgrywki/usun/<int:pk>', views.GameDeleteView.as_view(), name='game-delete'),
+
 ]
