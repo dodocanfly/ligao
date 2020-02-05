@@ -6,11 +6,10 @@
     Preloader
     ==================================*/
 
-    var preloader = $('#preloader');
+    // var preloader = $('#preloader');
     $(window).on('load', function() {
-        setTimeout(function() {
-            preloader.fadeOut('slow', function() { $(this).remove(); });
-        }, 300)
+        $('#preloader').hide();
+        // preloader.fadeOut('fast', function() { $(this).remove(); });
     });
 
     /*================================

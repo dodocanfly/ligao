@@ -4,6 +4,7 @@ from apps.dashboard.models import (
     TeamCategory,
     Season,
     Team,
+    Club,
 )
 from rest_framework import serializers
 
@@ -29,6 +30,12 @@ class TeamCategorySerializer(serializers.ModelSerializer):
 class SeasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Season
+        fields = ('id', 'name')
+
+
+class ClubSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Club
         fields = ('id', 'name')
 
 

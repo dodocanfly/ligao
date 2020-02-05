@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'apps.users.apps.UsersConfig',
     'apps.dashboard.apps.DashboardConfig',
-    'apps.volleyball.apps.VolleyballConfig',
 ]
 
 MIDDLEWARE = [

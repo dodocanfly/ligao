@@ -71,6 +71,10 @@ class Organization(models.Model):
     def get_one_with_games(cls, owner, organization_id):
         return cls.one_for_user(owner, organization_id).annotate(counter=models.Count('game_categories__games')).filter(counter__gt=0)
 
+    @classmethod
+    def all_with_seasons(cls, owner):
+        return cls.all_for_user(owner).annotate(counter=models.Count('seasons')).filter(counter__gt=0)
+
     def get_main_club_categories(self):
         return self.club_categories.filter(parent=None).order_by('name')
 
