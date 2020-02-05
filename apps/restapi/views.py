@@ -11,14 +11,14 @@ from apps.dashboard.models import (
     Team,
     ClubCategory,
     TeamCategory,
-)
+    Club)
 from apps.restapi.serializers import (
     # GameCategorySerializer,
     SeasonSerializer,
     TeamsSerializer,
     ClubCategorySerializer,
     TeamCategorySerializer,
-)
+    ClubSerializer)
 
 
 # class GameCategoryViewSet(ModelViewSet):
@@ -66,8 +66,24 @@ class SeasonViewSet(ModelViewSet):
 
     def get_queryset(self):
         organization = self.request.query_params.get('organization')
+        team_category = self.request.query_params.get('team_category')
         if organization and organization.isnumeric():
             return Season.objects.filter(organization__owner=self.request.user, organization_id=int(organization))
+        if team_category and team_category.isnumeric():
+            return Season.objects.filter(organization__owner=self.request.user, organization__team_categories__in=[int(team_category)])
+
+
+class ClubViewSet(ModelViewSet):
+    queryset = Club.objects.all()
+    serializer_class = ClubSerializer
+
+    def get_queryset(self):
+        team_category = self.request.query_params.get('team_category')
+        if team_category and team_category.isnumeric():
+            return Club.objects.filter(
+                category__organization__owner=self.request.user,
+                category__organization__team_categories__in=[int(team_category)]
+            )
 
 
 class TeamViewSet(ModelViewSet):

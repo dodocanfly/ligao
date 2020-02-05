@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">{% trans "Edytuj zespół" %}</h4>
-                <form method="post">
+                <form method="post" id="team-form-id" data-seasons-url="{% url 'restapi:api-seasons-list' %}" data-clubs-url="{% url 'restapi:api-clubs-list' %}">
                     {% include "dashboard/team-form.html" %}
                     <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">{% trans "zapisz zmiany" %}</button>
                     {% csrf_token %}

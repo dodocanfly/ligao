@@ -141,8 +141,24 @@ class TeamAddEditForm(MyModelForm):
             queryset=TeamCategory.objects.filter(organization__owner=self.request.user).order_by('organization__name', 'name'),
             validators=[valid_cat_is_leaf],
         )
-        self.fields['season'].queryset = Season.objects.filter(organization__owner=self.request.user).order_by('name')
-        self.fields['club'].queryset = Club.objects.filter(category__organization__owner=self.request.user).order_by('name')
+
+        self.fields['season'].queryset = Season.objects.none()
+        self.fields['club'].queryset = Club.objects.none()
+        if 'season' in self.data:
+            try:
+                category = int(self.data.get('category'))
+                self.fields['season'].queryset = Season.objects.filter(
+                    organization__owner=self.request.user,
+                    organization__team_categories__in=[category]).order_by('name')
+                self.fields['club'].queryset = Club.objects.filter(
+                    category__organization__owner=self.request.user,
+                    category__organization__team_categories__in=[category]).order_by('name')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            self.fields['season'].queryset = self.instance.category.organization.seasons.order_by('name')
+            self.fields['club'].queryset = Club.objects.filter(category__organization=self.instance.category.organization).order_by('name')
+
         self.set_widget_attrs(FIELDS_ATTRS)
 
     class Meta:

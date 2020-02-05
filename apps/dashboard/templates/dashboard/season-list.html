@@ -12,8 +12,15 @@
                     {% for object in object_list %}
                         <li>
                             {{ object.name }}
-                            <a href="{% url 'season-edit' object.id %}" class="cat-list-btn">{% trans "edytuj" %}</a>
-                            <a href="{% url 'season-delete' object.id %}" class="cat-list-btn cl-btn-2">{% trans "usuń" %}</a>
+                            <ol class="cat-list">
+                                {% for season in object.seasons.values %}
+                                    <li>
+                                        {{ season.name }}
+                                        <a href="{% url 'season-edit' season.id %}" class="cat-list-btn">{% trans "edytuj" %}</a>
+                                        <a href="{% url 'season-delete' season.id %}" class="cat-list-btn cl-btn-2">{% trans "usuń" %}</a>
+                                    </li>
+                                {% endfor %}
+                            </ol>
                         </li>
                     {% empty %}
                         <li>

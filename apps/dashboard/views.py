@@ -146,7 +146,8 @@ class SeasonListView(BaseListView):
     template_name = 'dashboard/season-list.html'
 
     def get_queryset(self):
-        return Season.objects.filter(organization__owner=self.request.user)
+        return Organization.all_with_seasons(self.request.user)
+        # return Season.objects.filter(organization__owner=self.request.user)
 
 
 class SeasonAddView(BaseCreateView):
